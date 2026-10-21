@@ -56,6 +56,7 @@ function finishReturn(observer, target) {
   observer?.disconnect();
   clearTimeout(returnTimer);
   returnObserver = null;
+  document.body.style.contain = "";
   if (target) target.style.visibility = target.dataset.returnVisibility || "";
   document.querySelectorAll(".page-return").forEach((node) => node.remove());
   try { sessionStorage.removeItem(originKey); } catch {}
@@ -94,7 +95,7 @@ function playReturn(origin, targetLink) {
     { transform: "translate(0, 0) scale(1) rotateY(0deg)", filter: "brightness(1.06)", offset: 0 },
     { transform: `translate(${dx * 0.42}px, ${dy * 0.42}px) scale(${1 + (scale - 1) * 0.42}) rotateY(-5deg)`, filter: "brightness(1.02)", offset: 0.42 },
     { transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotateY(0deg)`, filter: "brightness(1)", offset: 1 },
-  ], { duration: reducedMotion.matches ? 1 : 720, easing: "cubic-bezier(0.2, 0.78, 0.18, 1)", fill: "forwards" });
+  ], { duration: reducedMotion.matches ? 1 : 900, easing: "cubic-bezier(0.2, 0.78, 0.18, 1)", fill: "forwards" });
   animation.finished.then(() => finishReturn(null, target)).catch(() => finishReturn(null, target));
   return true;
 }
@@ -114,21 +115,32 @@ function resumeBookReturn() {
     return;
   }
 
+  let released = false;
+  const release = () => {
+    if (released) return;
+    released = true;
+    document.body.style.contain = "";
+  };
+
   const attempt = () => {
     const link = findOriginCard(origin);
     if (link && playReturn(origin, link)) {
       returnObserver?.disconnect();
       clearTimeout(returnTimer);
       returnObserver = null;
+      release();
       return true;
     }
     return false;
   };
   if (attempt()) return;
+
+  // 返回动画等待目标卡片渲染期间，先冻结文档重绘避免动画掉帧；找到卡片或超时后恢复。
+  document.body.style.contain = "layout paint";
   returnObserver = new MutationObserver(() => attempt());
   // 只观察主内容区：书卡渲染时会插入上千个节点，盯整个 body 会引发回调风暴。
   returnObserver.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
-  returnTimer = window.setTimeout(() => finishReturn(returnObserver, null), 2600);
+  returnTimer = window.setTimeout(() => { release(); finishReturn(returnObserver, null); }, 3200);
 }
 
 document.querySelectorAll("[data-back]").forEach((el) => {

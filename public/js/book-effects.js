@@ -6,16 +6,16 @@
  * 放大倍数由列间距实时算出：相邻两本书各占一半空隙，
  * 因此 scale ≤ 1 + 间隙 / 封面宽度（再留 20% 余量）。
  *
- * 转场三段合计约 2.2 秒（放大 700ms、翻页 650ms、铺满 840ms），节奏舒展完整；
+ * 转场三段合计约 2.6 秒（放大 860ms、翻页 780ms、铺满 1000ms），节奏从容舒展；
  * 不想看完时，再点一次或按 Esc / 空格 / Enter 会立即跳转，不让人干等。
  */
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 // ?turndemo=1 只演示翻书动画、不跳转，便于演示与截图
 const TURN_DEMO = new URLSearchParams(window.location.search).has("turndemo");
-// 三段动画时长：放大、翻页、铺满（保持原版节奏，不做压缩）
-const TURN_ZOOM_MS = 700;
-const TURN_FLIP_MS = 650;
-const TURN_FILL_MS = 840;
+// 三段动画时长：放大、翻页、铺满（从容节奏，配合 skip 使用）
+const TURN_ZOOM_MS = 860;
+const TURN_FLIP_MS = 780;
+const TURN_FILL_MS = 1000;
 
 let hovered = null;
 let turning = false;
@@ -191,18 +191,21 @@ async function startTurn(link) {
       zoomPage.finished,
     ]);
 
+    // 两段之间留一帧间隙，让缩放的收尾与翻转的起势不挤在同一帧上（更顺滑）。
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
     // 隐去封面背面，避免旋转到背面时标题镜像透出。
     clone.classList.add("is-open");
     // 书封翻过书脊，完整露出带书名与作者的内页。
     const flipRest = turnLayout(rect).rest;
-    const flip = clone.animate(
-      [{ transform: getComputedStyle(clone).transform, opacity: 1 }, { transform: `${flipRest} rotateY(-168deg)`, opacity: 0.98 }],
-      { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
-    );
-    const pageFollow = page.animate(
-      [{ transform: getComputedStyle(page).transform }, { transform: flipRest }],
-      { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
-    );
+  const flip = clone.animate(
+    [{ transform: getComputedStyle(clone).transform, opacity: 1 }, { transform: `${flipRest} rotateY(-168deg)`, opacity: 0.98 }],
+    { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
+  );
+  const pageFollow = page.animate(
+    [{ transform: getComputedStyle(page).transform }, { transform: flipRest }],
+    { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
+  );
     activeTurn = {
       rect, stage: "flip",
       entries: [

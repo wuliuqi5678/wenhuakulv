@@ -29,7 +29,8 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+/* 常驻滚动条槽位：转场/开屏时 body 加 overflow:hidden 不再引起整页横向跳动（卡顿感的主要来源） */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scrollbar-gutter: stable; }
 
 section[id], [id="shelf"], [id="about"] {
   scroll-margin-top: calc(var(--header-h) + 14px);
@@ -966,9 +967,10 @@ main { flex: 1 0 auto; }
 .reveal {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.95s ease, transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+/* 注意：这里刻意不加 will-change——53 张卡常驻合成层反而增加显存压力、
+   引起滚动掉帧；浏览器对 opacity/transform 过渡会自动做即时提升。 */
 .reveal.is-in { opacity: 1; transform: none; }
 
 /* ---------------------------------------------------------------- 响应式 */
@@ -1590,6 +1592,8 @@ body.is-page-turn { overflow: hidden; }
   z-index: 300;
   pointer-events: none;
   perspective: 1700px;
+  /* 自成一层：翻书动画期间不与文档其余部分互相污染重绘 */
+  contain: layout paint;
 }
 .page-turn::before {
   content: "";
@@ -1598,7 +1602,7 @@ body.is-page-turn { overflow: hidden; }
   background-color: var(--paper);
   background-image: radial-gradient(1100px 560px at 50% 20%, rgba(158, 43, 37, 0.045), transparent 70%);
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.7s ease;
 }
 .page-turn.is-active::before { opacity: 1; }
 
@@ -1618,7 +1622,7 @@ body.is-page-turn { overflow: hidden; }
   border-left: 1px solid rgba(80, 60, 39, 0.18);
   backface-visibility: hidden;
   transform-origin: left center;
-  transition: transform 0.62s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease;
+  transition: transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.6s ease;
   z-index: 1;
 }
 
@@ -1667,12 +1671,13 @@ body.is-page-turn { overflow: hidden; }
   margin: 0 !important;
   transform-origin: left center;
   box-shadow: 0 34px 70px -26px rgba(20, 18, 15, 0.6);
-  transition: transform 0.62s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.4s ease;
+  transition: transform 0.82s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.5s ease;
   will-change: transform;
+  backface-visibility: hidden;
   z-index: 2;
 }
 .page-turn__book.is-open {
-  transition: transform 0.56s cubic-bezier(0.32, 0.06, 0.2, 1), opacity 0.5s ease;
+  transition: transform 0.76s cubic-bezier(0.32, 0.06, 0.2, 1), opacity 0.6s ease;
   backface-visibility: hidden;
 }
 .page-turn__book.is-open::after {
@@ -1682,7 +1687,7 @@ body.is-page-turn { overflow: hidden; }
   pointer-events: none;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.08) 12%, transparent 32% 76%, rgba(255, 255, 255, 0.22));
   opacity: 0.9;
-  transition: opacity 0.58s cubic-bezier(0.32, 0.06, 0.2, 1);
+  transition: opacity 0.7s cubic-bezier(0.32, 0.06, 0.2, 1);
 }
 
 /* Returning cover floats over the restored page; the shelf itself stays still. */
@@ -1693,6 +1698,8 @@ body.is-page-turn { overflow: hidden; }
   overflow: hidden;
   pointer-events: none;
   background: transparent;
+  /* 返回动画同样自成一层，避免与书架重绘互相干扰 */
+  contain: layout paint;
 }
 .page-return__cover {
   z-index: 1;
@@ -1712,7 +1719,9 @@ body.is-page-turn { overflow: hidden; }
   overflow: hidden;
   pointer-events: none;
   background: #FBF8F1;
-  animation: book-arrival-out 920ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  animation: book-arrival-out 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  /* 入场淡出层同样隔离绘制，保证详情页内容在下方加载重排时不拖慢动画帧 */
+  contain: layout paint;
 }
 .book-arrival__sheet {
   width: 100vw;
