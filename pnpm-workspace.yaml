@@ -1,0 +1,6 @@
+# pnpm 11 从本文件读取配置（不再从 .npmrc 读取）。
+# 本机环境下默认的 isolated 布局会创建 junction，
+# 而 Node 无法穿透这些 junction 解析传递依赖（报 Cannot find module 'body-parser'），
+# 因此改用 hoisted（扁平真实目录）布局。
+nodeLinker: hoisted
+storeDir: .pnpm-store

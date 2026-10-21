@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>分类 · 文化苦旅</title>
+<meta name="description" content="文化苦旅 · 按体裁把全部书目分成七类，逐类浏览。">
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#categories">跳到分类</a>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="back-btn" href="index.html" data-back aria-label="返回上一页">
+        <span class="back-btn__arrow" aria-hidden="true">←</span><span class="back-btn__label">返回</span>
+      </a>
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="index.html#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell" id="categories">
+  <div class="cat-hero">
+    <p class="crumb"><a href="index.html">书架</a><span aria-hidden="true">/</span><span>分类</span></p>
+    <h1>分类</h1>
+    <p>五十余本书，按体裁归入七个类别。可以点上面的类别直接跳下去，也可以一路慢慢翻。</p>
+    <p class="authors-meta" id="cat-meta" aria-live="polite">正在整理…</p>
+  </div>
+
+  <nav class="cat-jump" id="cat-jump" aria-label="类别导航"></nav>
+
+  <div id="cat-sections"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 本地运行 · 无第三方依赖</span>
+    </div>
+    <p class="site-footer__note">
+      类别依体裁归并，只作阅读索引之用；一本书可能兼有几种气质，分类不代表它的全部。
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+    本页需要 JavaScript 才能读取书目数据。请在浏览器中启用脚本后刷新。
+  </p>
+</noscript>
+
+<script type="module" src="js/ui.js"></script>
+<script type="module" src="js/book-effects.js"></script>
+<script type="module" src="js/categories-page.js"></script>
+</body>
+</html>

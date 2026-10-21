@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书籍漫游 · 文化苦旅</title>
+<meta name="description" content="按兴趣随机漫游：从五十余部作品里，挑一本此刻与你相近的书。">
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#roam-stage">跳到漫游</a>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="back-btn" href="index.html" data-back aria-label="返回上一页">
+        <span class="back-btn__arrow" aria-hidden="true">←</span><span class="back-btn__label">返回</span>
+      </a>
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="index.html#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="roam-hero">
+    <p class="crumb"><a href="index.html">书架</a><span aria-hidden="true">/</span><span>漫游</span></p>
+    <h1>书籍漫游</h1>
+    <p>
+      选几个你在意的词，或者什么都不选。剩下的交给随机——它只会挑出「有那么一点像你」的书。
+      每换一本都是一次新的相遇。
+    </p>
+  </div>
+
+  <div class="roam-interests" id="roam-interests" role="group" aria-label="按兴趣筛选"></div>
+
+  <div class="roam-actions">
+    <button class="btn" type="button" id="roam-next">换一本</button>
+    <button class="btn btn--ghost" type="button" id="roam-clear">清空偏好</button>
+  </div>
+
+  <section class="roam-stage" id="roam-stage" aria-live="polite" aria-label="漫游结果">
+    <p class="roam-empty">正在挑书…</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 本地运行 · 无第三方依赖</span>
+    </div>
+    <p class="site-footer__note">
+      漫游结果由标签权重随机产生，仅作发现书目之用；同一偏好下每次结果都可能不同。
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+    本页需要 JavaScript 才能读取书目数据。请在浏览器中启用脚本后刷新。
+  </p>
+</noscript>
+
+<script type="module" src="js/ui.js"></script>
+<script type="module" src="js/roam.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文化苦旅 · 中国现当代文学书影</title>
+<meta name="description" content="从《呼兰河传》到《本巴》，五十余部值得一读再读的中国现当代文学作品。文化苦旅 · WENHUAKULV。">
+<meta name="theme-color" content="#F3EEE4">
+<meta property="og:title" content="文化苦旅 · 中国现当代文学书影">
+<meta property="og:description" content="山河是纸，岁月是墨。五十余部中国现当代文学作品，一册一册地看过去。">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<script>
+  (function () {
+    try {
+      var params = new URLSearchParams(location.search);
+      var force = params.get("splash");
+      var searching = params.has("q");
+      var shown = sessionStorage.getItem("wk_splash") === "1";
+      if (force === "0" || searching || (force !== "1" && shown)) {
+        document.documentElement.classList.add("splash-skip");
+      }
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#shelf">跳到书目</a>
+
+<div class="splash" id="splash" role="note" aria-label="开篇题词">
+  <div class="splash__inner">
+    <p class="splash__line">千般荒凉，以此为梦；</p>
+    <p class="splash__line">万里蹀躞，以此为归。</p>
+    <p class="splash__sign">——余秋雨</p>
+  </div>
+  <button class="splash__skip" type="button">跳过</button>
+</div>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#shelf">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="shell hero">
+    <p class="hero__eyebrow" id="hero-range">中国现当代文学书影</p>
+    <h1 class="hero__title">文化苦旅</h1>
+    <p class="hero__lead">
+      山河是纸，岁月是墨。这里收着中国现当代文学里，那些<span class="nowrap">值得我们一读再读</span>的书——
+      小说、散文、戏剧、<span class="nowrap">历史与科幻</span>，一册一册地看过去。
+    </p>
+    <p class="hero__stats" id="hero-stats" aria-live="polite"></p>
+
+    <a class="hero__feature" id="hero-feature" href="book.html?id=wenhuakulv">
+      <span class="hero__feature-cover" id="hero-feature-cover"></span>
+      <span class="hero__feature-cap">同名之作 · 余秋雨《文化苦旅》</span>
+    </a>
+
+    <p class="hero__aside" aria-hidden="true">
+      <span class="hero__aside-rule"></span>
+      <span class="hero__aside-text">读万卷书　行万里路</span>
+    </p>
+  </section>
+
+  <div class="toolbar">
+    <div class="shell toolbar__in">
+      <div class="decades" id="decades" role="group" aria-label="按年代筛选"></div>
+      <label class="search">
+        <input id="search" type="search" placeholder="筛选：书名 / 作者 / 体裁" aria-label="在书墙内筛选" autocomplete="off">
+      </label>
+      <span class="toolbar__count" id="count" aria-live="polite">共 0 部</span>
+    </div>
+  </div>
+
+  <section class="shell" aria-label="书目">
+    <ul class="shelf" id="shelf"></ul>
+  </section>
+
+  <noscript>
+    <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+      本页需要 JavaScript 才能读取书目数据。请在浏览器中启用脚本后刷新。
+    </p>
+  </noscript>
+
+  <section class="shell about" id="about">
+    <h2>关于这座<br>纸上书旅</h2>
+    <div>
+      <p>
+        名字取自余秋雨的同名散文集。那本书教人把山水与典籍放在一起读，于是这里也试着
+        把「书」当成一处可以走进去的地方：封面是门，简介是路，荐语是我们替你留下的标记。
+      </p>
+      <p>
+        所收作品以 1949 年以后初版或首次发表的中文著作为主，另收少量更早的现代文学经典
+        （如 1941 年初版的《呼兰河传》）；体裁以长篇小说为主，兼及散文、戏剧、学术与科幻；
+        年份以初版为准，奖项只标有依据者。
+      </p>
+      <p>
+        页面中的<em>书影为版式再创作</em>：依据书名、作者与年代重新设计，不是原书封面的扫描件。
+        若想换成真实书照，把图片放进 <code>public/covers/</code>，并在
+        <code>public/data/books.json</code> 对应条目加上 <code>"photo": "covers/文件名.jpg"</code> 即可，
+        图片加载失败时会自动退回当前的设计书影。
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 本地运行 · 无第三方依赖</span>
+    </div>
+    <p class="site-footer__note">
+      本站为个人阅读索引，所引书目信息仅作介绍之用；书影为版式再创作，著作权归原出版方与设计者所有。
+    </p>
+  </div>
+</footer>
+
+<script type="module" src="js/ui.js"></script>
+<script type="module" src="js/splash.js"></script>
+<script type="module" src="js/book-effects.js"></script>
+<script type="module" src="js/index.js"></script>
+</body>
+</html>

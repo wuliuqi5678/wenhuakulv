@@ -1,0 +1,18 @@
+{
+  "name": "local-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "本地 Express 接口服务：提供 REST API 与静态前端页面",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作品详情 · 文化苦旅</title>
+<meta name="description" content="文化苦旅 · 当代中国文学书影。">
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<div class="book-arrival" id="book-arrival" aria-hidden="true" hidden>
+  <div class="book-arrival__sheet">
+    <span class="book-arrival__title"></span>
+    <span class="book-arrival__author"></span>
+  </div>
+</div>
+<script>
+  try {
+    const arrival = JSON.parse(sessionStorage.getItem("wk_book_arrival") || "null");
+    const requestedId = new URLSearchParams(location.search).get("id");
+    const layer = document.getElementById("book-arrival");
+    if (arrival && arrival.id === requestedId && layer) {
+      layer.querySelector(".book-arrival__title").textContent = arrival.title || "";
+      layer.querySelector(".book-arrival__author").textContent = arrival.author || "";
+      const scale = Math.min(5, Math.max(1, Number(arrival.scale) || 1));
+      layer.style.setProperty("--arrival-scale", scale);
+      layer.style.setProperty("--arrival-line", `${26 * scale}px`);
+      layer.hidden = false;
+      layer.addEventListener("animationend", () => layer.remove(), { once: true });
+      sessionStorage.removeItem("wk_book_arrival");
+    }
+  } catch {
+    /* 浏览器禁用会话存储时直接显示作品详情。 */
+  }
+</script>
+
+<a class="skip-link" href="#book">跳到正文</a>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="back-btn" href="index.html" data-back aria-label="返回上一页">
+        <span class="back-btn__arrow" aria-hidden="true">←</span><span class="back-btn__label">返回</span>
+      </a>
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="index.html#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="detail reveal" id="book">
+
+    <aside class="detail__aside">
+      <div class="detail__cover" id="cover-slot"></div>
+      <p class="detail__cover-note">书影 · 版式再创作</p>
+    </aside>
+
+    <article>
+      <p class="crumb">
+        <a href="index.html">书架</a>
+        <span aria-hidden="true">/</span>
+        <span id="crumb-title">作品</span>
+      </p>
+
+      <h1 class="detail__title" id="book-title">正在翻开…</h1>
+      <p class="detail__sub" id="book-sub"></p>
+      <div class="tags" id="book-tags"></div>
+
+      <dl class="meta" id="book-meta"></dl>
+
+      <div class="intro" id="book-intro"></div>
+
+      <blockquote class="why" id="book-why"></blockquote>
+      <p class="note" id="book-note" hidden></p>
+
+      <section class="book-author" id="book-author" aria-label="作者">
+        <h2>作者</h2>
+        <div id="book-author-slot"></div>
+      </section>
+
+      <section class="related" id="related" aria-label="相关阅读">
+        <h2>可以一起读</h2>
+        <ul class="shelf" id="related-list"></ul>
+      </section>
+
+      <nav class="pager" id="pager" aria-label="上一本 / 下一本"></nav>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 本地运行 · 无第三方依赖</span>
+    </div>
+    <p class="site-footer__note">
+      本站为个人阅读索引，所引书目信息仅作介绍之用；书影为版式再创作，著作权归原出版方与设计者所有。
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+    本页需要 JavaScript 才能读取书目数据。请在浏览器中启用脚本后刷新。
+  </p>
+</noscript>
+
+<script type="module" src="js/ui.js"></script>
+<script type="module" src="js/book-effects.js"></script>
+<script type="module" src="js/book.js"></script>
+</body>
+</html>
