@@ -33,10 +33,16 @@ if (splash && !skipped) {
     finish();
   });
 
-  document.addEventListener("keydown", (event) => {
+  const onKey = (event) => {
     if (event.key === "Escape") {
       window.clearTimeout(timer);
       finish();
     }
-  });
+  };
+  document.addEventListener("keydown", onKey);
+
+  // 题词结束后清掉全局监听，不留隐患。
+  const cleanup = () => document.removeEventListener("keydown", onKey);
+  splash.addEventListener("transitionend", cleanup, { once: true });
+  window.setTimeout(cleanup, SPLASH_MS + 1000);
 }

@@ -126,7 +126,8 @@ function resumeBookReturn() {
   };
   if (attempt()) return;
   returnObserver = new MutationObserver(() => attempt());
-  returnObserver.observe(document.body, { childList: true, subtree: true });
+  // 只观察主内容区：书卡渲染时会插入上千个节点，盯整个 body 会引发回调风暴。
+  returnObserver.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
   returnTimer = window.setTimeout(() => finishReturn(returnObserver, null), 2600);
 }
 
@@ -181,7 +182,8 @@ document.addEventListener("keydown", (event) => {
   const tag = document.activeElement?.tagName;
   if (tag === "INPUT" || tag === "TEXTAREA" || document.activeElement?.isContentEditable) return;
   const input = document.querySelector(".head-search input");
-  if (!input) return;
+  // 小屏下搜索框隐藏时不去抢焦点，避免「按了没反应」的错觉。
+  if (!input || input.offsetParent === null) return;
   event.preventDefault();
   input.focus();
   input.select?.();

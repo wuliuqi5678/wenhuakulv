@@ -12,8 +12,11 @@ async function main() {
   try {
     const [bookData, authorData] = await Promise.all([loadBooks(), loadAuthors()]);
     const books = sortByYear(bookData.books ?? []);
+    // 生年不详（born 为 null）的作者放在末尾，其余按生年升序。
     const authors = [...(authorData.authors ?? [])].sort(
-      (a, b) => a.born - b.born || a.name.localeCompare(b.name, "zh")
+      (a, b) =>
+        (a.born ?? Infinity) - (b.born ?? Infinity) ||
+        a.name.localeCompare(b.name, "zh")
     );
 
     const counts = new Map();

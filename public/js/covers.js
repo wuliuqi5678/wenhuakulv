@@ -100,23 +100,36 @@ export function createBookCard(book, { reveal = true, heading = "h2" } = {}) {
 
 /** 载入书目数据。 */
 export async function loadBooks() {
-  const res = await fetch("data/books.json", { cache: "no-store" });
+  const res = await fetch("data/books.json");
   if (!res.ok) throw new Error(`书目数据加载失败（HTTP ${res.status}）`);
   return res.json();
 }
 
 /** 载入作者数据。 */
 export async function loadAuthors() {
-  const res = await fetch("data/authors.json", { cache: "no-store" });
+  const res = await fetch("data/authors.json");
   if (!res.ok) throw new Error(`作者数据加载失败（HTTP ${res.status}）`);
   return res.json();
 }
 
-/** 年代键，例如 1957 -> "1950s"。 */
-export const decadeOf = (year) => `${Math.floor(year / 10) * 10}s`;
+/** 把任意输入规范成合法年份；无法解析时返回 null。 */
+const safeYear = (year) => {
+  const n = Number(year);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
+};
+
+/** 年代键，例如 1957 -> "1950s"；年份非法时返回 "其他"。 */
+export const decadeOf = (year) => {
+  const y = safeYear(year);
+  return y === null ? "其他" : `${Math.floor(y / 10) * 10}s`;
+};
 
 export function sortByYear(books) {
-  return [...books].sort((a, b) => a.year - b.year || a.title.localeCompare(b.title, "zh"));
+  return [...books].sort((a, b) => {
+    const ya = safeYear(a.year) ?? Infinity;
+    const yb = safeYear(b.year) ?? Infinity;
+    return ya - yb || String(a.title).localeCompare(String(b.title), "zh");
+  });
 }
 
 export { esc };

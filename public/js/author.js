@@ -81,8 +81,9 @@ async function main() {
     el.worksWrap.remove();
   }
 
+  // 「同时代人」按生年就近排列；生年不详（born 为 null）的作者不参与。
   const nearby = authors
-    .filter((a) => a.id !== author.id)
+    .filter((a) => a.id !== author.id && Number.isFinite(a.born))
     .map((a) => ({ a, diff: Math.abs(a.born - author.born) }))
     .sort((x, y) => x.diff - y.diff || x.a.born - y.a.born)
     .slice(0, 5);

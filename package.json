@@ -1,8 +1,8 @@
 {
-  "name": "local-server",
-  "version": "1.0.0",
+  "name": "wenhuakulv-site",
+  "version": "1.1.0",
   "private": true,
-  "description": "本地 Express 接口服务：提供 REST API 与静态前端页面",
+  "description": "文化苦旅 · 中国现当代文学书影：本地 Express 静态站点，收录 53 部作品的中文书籍介绍",
   "type": "module",
   "main": "server.js",
   "engines": {

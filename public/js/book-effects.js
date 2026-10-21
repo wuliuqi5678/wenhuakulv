@@ -5,17 +5,38 @@
  *
  * 放大倍数由列间距实时算出：相邻两本书各占一半空隙，
  * 因此 scale ≤ 1 + 间隙 / 封面宽度（再留 20% 余量）。
+ *
+ * 转场三段合计约 620ms：翻页应该是一瞬，而不是一场演出；
+ * 动画期间再点一次或按 Esc / 空格会立即跳转，不让人干等。
  */
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 // ?turndemo=1 只演示翻书动画、不跳转，便于演示与截图
 const TURN_DEMO = new URLSearchParams(window.location.search).has("turndemo");
+// 三段动画时长：放大 320ms、翻页 240ms、铺满 60ms
+const TURN_ZOOM_MS = 320;
+const TURN_FLIP_MS = 240;
+const TURN_FILL_MS = 60;
 
 let hovered = null;
 let turning = false;
 let turnRun = 0;
+let pendingHref = ""; // 转场结束后要去的地址；跳过时立即前往
 const BOOK_ORIGIN_KEY = "wk_book_origin";
 let activeTurn = null;
 let resizeFrame = 0;
+
+/** 立即结束当前转场：清遮罩、解锁点击，并按需直接跳转。 */
+function bailTurn(navigate = true) {
+  turnRun += 1;
+  turning = false;
+  activeTurn = null;
+  document.querySelectorAll(".page-turn").forEach((el) => el.remove());
+  document.body.classList.remove("is-page-turn");
+  if (navigate && pendingHref && !TURN_DEMO) {
+    window.location.href = pendingHref;
+  }
+  pendingHref = "";
+}
 
 function turnLayout(rect) {
   const scale = Math.min(2.2, (window.innerHeight * 0.7) / rect.height, (window.innerWidth * 0.8) / rect.width);
@@ -115,6 +136,7 @@ async function startTurn(link) {
   if (!rect.width || !rect.height) return;
 
   turning = true;
+  pendingHref = link.href;
   const run = ++turnRun;
   rememberBookOrigin(link, cover);
 
@@ -154,7 +176,7 @@ async function startTurn(link) {
 
   try {
     // 封面与内页使用同一时长、曲线、起点和书脊缩放轴，放大时严丝合缝。
-    const zoomIn = { duration: 700, easing, fill: "forwards" };
+    const zoomIn = { duration: TURN_ZOOM_MS, easing, fill: "forwards" };
     const zoomCover = clone.animate([{ transform: "none" }, { transform: rest }], zoomIn);
     const zoomPage = page.animate([{ opacity: 0, transform: "none" }, { opacity: 1, transform: rest }], zoomIn);
     activeTurn = {
@@ -175,17 +197,17 @@ async function startTurn(link) {
     const flipRest = turnLayout(rect).rest;
     const flip = clone.animate(
       [{ transform: getComputedStyle(clone).transform, opacity: 1 }, { transform: `${flipRest} rotateY(-168deg)`, opacity: 0.98 }],
-      { duration: 650, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
+      { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
     );
     const pageFollow = page.animate(
       [{ transform: getComputedStyle(page).transform }, { transform: flipRest }],
-      { duration: 650, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
+      { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
     );
     activeTurn = {
       rect, stage: "flip",
       entries: [
-        { animation: flip, element: clone, duration: 650, to: (next) => ({ transform: `${next.rest} rotateY(-168deg)`, opacity: 0.98 }) },
-        { animation: pageFollow, element: page, duration: 650, to: (next) => ({ transform: next.rest, opacity: 1 }) },
+        { animation: flip, element: clone, duration: TURN_FLIP_MS, to: (next) => ({ transform: `${next.rest} rotateY(-168deg)`, opacity: 0.98 }) },
+        { animation: pageFollow, element: page, duration: TURN_FLIP_MS, to: (next) => ({ transform: next.rest, opacity: 1 }) },
       ],
     };
     await Promise.all([flip.finished, pageFollow.finished]);
@@ -195,21 +217,18 @@ async function startTurn(link) {
     const fillLayout = turnLayout(rect);
     const fill = page.animate(
       [{ transform: getComputedStyle(page).transform, opacity: 1 }, { transform: fillLayout.final, opacity: 1 }],
-      { duration: 840, easing, fill: "forwards" }
+      { duration: TURN_FILL_MS, easing, fill: "forwards" }
     );
     activeTurn = {
       rect, stage: "fill",
-      entries: [{ animation: fill, element: page, duration: 840, to: (next) => ({ transform: next.final, opacity: 1 }) }],
+      entries: [{ animation: fill, element: page, duration: TURN_FILL_MS, to: (next) => ({ transform: next.final, opacity: 1 }) }],
     };
     await fill.finished;
 
     if (TURN_DEMO) {
       // 让演示参数可重复使用：内页轻轻淡出后清理遮罩并恢复书架。
       await page.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: "ease-out", fill: "forwards" }).finished;
-      overlay.remove();
-      document.body.classList.remove("is-page-turn");
-      turning = false;
-      activeTurn = null;
+      bailTurn(false);
       return;
     }
 
@@ -223,19 +242,24 @@ async function startTurn(link) {
     } catch {
       // 隐私模式可能禁用 sessionStorage；此时继续正常打开详情页。
     }
+    turning = false;
+    activeTurn = null;
+    pendingHref = "";
     window.location.href = link.href;
   } catch (error) {
     if (run !== turnRun) {
+      // 已被跳过/新一轮接管，此处只负责清理，不重复跳转。
       overlay.remove();
       return;
     }
     activeTurn = null;
+    turning = false;
+    pendingHref = "";
     // 转场被浏览器中断时仍打开作品，不让链接失去作用。
     if (!TURN_DEMO) window.location.href = link.href;
     else {
       overlay.remove();
       document.body.classList.remove("is-page-turn");
-      turning = false;
     }
   }
 }
@@ -246,12 +270,16 @@ document.addEventListener(
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (prefersReduced.matches) return;
 
-    const link = event.target.closest?.("a.book__link");
-    if (!link) return;
+    // 转场进行中：任意一次普通点击都视为「跳过」，立即前往目标页。
     if (turning) {
       event.preventDefault();
+      event.stopPropagation();
+      bailTurn(true);
       return;
     }
+
+    const link = event.target.closest?.("a.book__link");
+    if (!link) return;
 
     event.preventDefault();
     startTurn(link);
@@ -259,14 +287,25 @@ document.addEventListener(
   true
 );
 
+// 键盘同样可以跳过：Esc / 空格 / Enter 立即结束转场。
+document.addEventListener("keydown", (event) => {
+  if (!turning) return;
+  if (event.key === "Escape" || event.key === " " || event.key === "Enter") {
+    event.preventDefault();
+    bailTurn(true);
+  }
+},
+true);
+
 // 从 bfcache 返回时清掉可能残留的转场层
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) {
     turnRun += 1;
-    document.querySelectorAll(".page-turn").forEach((el) => el.remove());
-    document.body.classList.remove("is-page-turn", "is-returning");
     turning = false;
     activeTurn = null;
+    pendingHref = "";
+    document.querySelectorAll(".page-turn").forEach((el) => el.remove());
+    document.body.classList.remove("is-page-turn", "is-returning");
     try {
       const origin = JSON.parse(sessionStorage.getItem(BOOK_ORIGIN_KEY) || "null");
       const currentId = new URLSearchParams(window.location.search).get("id");

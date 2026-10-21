@@ -46,6 +46,8 @@ function renderInterests() {
 }
 
 function pickWeighted() {
+  if (!state.books.length) return null;
+
   let pool = state.books.filter((book) => !state.shown.has(book.id));
   if (!pool.length) {
     state.shown.clear();

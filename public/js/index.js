@@ -1,7 +1,7 @@
 /**
  * 书架首页：按年代筛选、书名/作者检索、渐入动画。
  */
-import { loadBooks, createBookCard, createCover, decadeOf, sortByYear } from "./covers.js";
+import { loadBooks, createBookCard, createCover, decadeOf, sortByYear, esc } from "./covers.js";
 
 const el = {
   shelf: document.getElementById("shelf"),
@@ -33,16 +33,19 @@ const observer = () => {
 
 function setStats(data) {
   if (!el.stats) return;
-  const years = state.books.map((b) => b.year);
+  const years = state.books.map((b) => Number(b.year)).filter((y) => Number.isFinite(y) && y > 0);
   const decades = new Set(state.books.map((b) => decadeOf(b.year)));
+  const rangeText = years.length
+    ? `${Math.min(...years)}—${Math.max(...years)}`
+    : "1941—2022";
   el.stats.innerHTML = `
     <span><b>${state.books.length}</b>部作品</span>
     <span><b>${decades.size}</b>个年代</span>
-    <span><b>${Math.min(...years)}—${Math.max(...years)}</b>年</span>
+    <span><b>${rangeText}</b>年</span>
   `;
 
   const range = document.getElementById("hero-range");
-  if (range) {
+  if (range && years.length) {
     range.textContent = `${Math.min(...years)} — ${Math.max(...years)} · 中国现当代文学书影`;
   }
 
@@ -189,7 +192,7 @@ async function main() {
     renderFeature();
   } catch (error) {
     console.error(error);
-    el.shelf.innerHTML = `<li class="empty"><b>书目加载失败</b>${error.message}<br>请确认通过本地服务器访问本页（http://127.0.0.1:3000）。</li>`;
+    el.shelf.innerHTML = `<li class="empty"><b>书目加载失败</b>${esc(error.message)}<br>请确认通过本地服务器访问本页（http://127.0.0.1:3000）。</li>`;
   }
 }
 
