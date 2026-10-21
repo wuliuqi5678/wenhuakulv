@@ -6,16 +6,16 @@
  * 放大倍数由列间距实时算出：相邻两本书各占一半空隙，
  * 因此 scale ≤ 1 + 间隙 / 封面宽度（再留 20% 余量）。
  *
- * 转场三段合计约 620ms：翻页应该是一瞬，而不是一场演出；
- * 动画期间再点一次或按 Esc / 空格会立即跳转，不让人干等。
+ * 转场三段合计约 2.2 秒（放大 700ms、翻页 650ms、铺满 840ms），节奏舒展完整；
+ * 不想看完时，再点一次或按 Esc / 空格 / Enter 会立即跳转，不让人干等。
  */
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 // ?turndemo=1 只演示翻书动画、不跳转，便于演示与截图
 const TURN_DEMO = new URLSearchParams(window.location.search).has("turndemo");
-// 三段动画时长：放大 320ms、翻页 240ms、铺满 60ms
-const TURN_ZOOM_MS = 320;
-const TURN_FLIP_MS = 240;
-const TURN_FILL_MS = 60;
+// 三段动画时长：放大、翻页、铺满（保持原版节奏，不做压缩）
+const TURN_ZOOM_MS = 700;
+const TURN_FLIP_MS = 650;
+const TURN_FILL_MS = 840;
 
 let hovered = null;
 let turning = false;
