@@ -944,6 +944,14 @@ main { flex: 1 0 auto; }
   padding: 0.06em 0.14em 0 0;
   color: var(--seal);
 }
+/* 单笔画字（一/丨/丶/丿/乙）放大后只是一根红杠，会把第一句“划掉”，改为正常字号。 */
+.intro.intro--plain p:first-of-type::first-letter {
+  float: none;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  color: inherit;
+}
 
 .why {
   position: relative;

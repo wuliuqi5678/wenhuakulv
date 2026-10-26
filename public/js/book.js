@@ -333,7 +333,13 @@ async function main() {
 
   renderBookLists(book, listData);
 
-  ids.intro.innerHTML = (book.intro ?? []).map((p) => `<p>${esc(p)}</p>`).join("");
+  const intro = book.intro ?? [];
+  ids.intro.innerHTML = intro.map((p) => `<p>${esc(p)}</p>`).join("");
+  // 首字下沉只对完整汉字成立：标点（《、“）、数字和单笔画字（一）放大后都不像装饰，
+  // 反而会压住第一句或把书名/年份拆开，这类作品改用正常字号。
+  const firstChar = (intro[0] ?? "").charAt(0);
+  const canDropCap = /[\u4e00-\u9fff]/.test(firstChar) && !/[一丨丶丿乙]/.test(firstChar);
+  ids.intro.classList.toggle("intro--plain", !canDropCap);
 
   const quotes = book.quotes ?? [];
   if (quotes.length && ids.quotes && ids.quotesList) {

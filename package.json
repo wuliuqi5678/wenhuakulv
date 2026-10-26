@@ -1,6 +1,6 @@
 {
   "name": "wenhuakulv-site",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
   "description": "文化苦旅 · 中国现当代文学书影：本地 Express 站点，收录 300 部作品、67 位作者、10 份主题书单，含书库联动的阅读路径、首页书库筛选、防剧透与书库推荐 AI 助手",
   "type": "module",
@@ -11,7 +11,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "test": "node data/verify-site.mjs && node data/verify-library-store.mjs"
+    "test": "node data/verify-site.mjs && node data/verify-library-store.mjs",
+    "rewrite:validate": "node data/intro-rewrite/validate.mjs",
+    "rewrite:merge": "node data/intro-rewrite/validate.mjs && node data/intro-rewrite/merge.mjs"
   },
   "dependencies": {
     "express": "^4.21.2"

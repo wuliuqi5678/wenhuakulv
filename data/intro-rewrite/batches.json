@@ -1,0 +1,2126 @@
+[
+  [
+    {
+      "id": "chaguan",
+      "title": "茶馆",
+      "author": "老舍",
+      "year": 1958,
+      "genre": "话剧"
+    },
+    {
+      "id": "linhaixueyuan",
+      "title": "林海雪原",
+      "author": "曲波",
+      "year": 1957,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qingchunzhige",
+      "title": "青春之歌",
+      "author": "杨沫",
+      "year": 1958,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "baohulu",
+      "title": "宝葫芦的秘密",
+      "author": "张天翼",
+      "year": 1958,
+      "genre": "儿童文学"
+    },
+    {
+      "id": "chuangyeshi",
+      "title": "创业史",
+      "author": "柳青",
+      "year": 1960,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "hongyan",
+      "title": "红岩",
+      "author": "罗广斌、杨益言",
+      "year": 1961,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "lizicheng",
+      "title": "李自成（第一卷）",
+      "author": "姚雪垠",
+      "year": 1963,
+      "genre": "历史小说"
+    },
+    {
+      "id": "dongfang",
+      "title": "东方",
+      "author": "魏巍",
+      "year": 1978,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "suixianglu",
+      "title": "随想录",
+      "author": "巴金",
+      "year": 1986,
+      "genre": "散文"
+    },
+    {
+      "id": "furongzhen",
+      "title": "芙蓉镇",
+      "author": "古华",
+      "year": 1981,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "meidelicheng",
+      "title": "美的历程",
+      "author": "李泽厚",
+      "year": 1981,
+      "genre": "学术随笔"
+    },
+    {
+      "id": "rensheng",
+      "title": "人生",
+      "author": "路遥",
+      "year": 1982,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wanli15",
+      "title": "万历十五年",
+      "author": "黄仁宇",
+      "year": 1982,
+      "genre": "历史"
+    },
+    {
+      "id": "pingfandeshijie",
+      "title": "平凡的世界",
+      "author": "路遥",
+      "year": 1986,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "honggaoliang",
+      "title": "红高粱家族",
+      "author": "莫言",
+      "year": 1987,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wenhuakulv",
+      "title": "文化苦旅",
+      "author": "余秋雨",
+      "year": 1992,
+      "genre": "散文"
+    },
+    {
+      "id": "bailuyuan",
+      "title": "白鹿原",
+      "author": "陈忠实",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "huozhe",
+      "title": "活着",
+      "author": "余华",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "changhenge",
+      "title": "长恨歌",
+      "author": "王安忆",
+      "year": 1995,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "caofangzi",
+      "title": "草房子",
+      "author": "曹文轩",
+      "year": 1997,
+      "genre": "儿童文学"
+    },
+    {
+      "id": "chenailuoding",
+      "title": "尘埃落定",
+      "author": "阿来",
+      "year": 1998,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qinqiang",
+      "title": "秦腔",
+      "author": "贾平凹",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "eergunahai",
+      "title": "额尔古纳河右岸",
+      "author": "迟子建",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "santi",
+      "title": "三体",
+      "author": "刘慈欣",
+      "year": 2008,
+      "genre": "科幻"
+    },
+    {
+      "id": "tuina",
+      "title": "推拿",
+      "author": "毕飞宇",
+      "year": 2008,
+      "genre": "长篇小说"
+    }
+  ],
+  [
+    {
+      "id": "yijudingyiwanju",
+      "title": "一句顶一万句",
+      "author": "刘震云",
+      "year": 2009,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "fanhua",
+      "title": "繁花",
+      "author": "金宇澄",
+      "year": 2012,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "renshijian",
+      "title": "人世间",
+      "author": "梁晓声",
+      "year": 2017,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zhujue",
+      "title": "主角",
+      "author": "陈彦",
+      "year": 2018,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qianlijiangshantu",
+      "title": "千里江山图",
+      "author": "孙甘露",
+      "year": 2022,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "baoshui",
+      "title": "宝水",
+      "author": "乔叶",
+      "year": 2022,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "benba",
+      "title": "本巴",
+      "author": "刘亮程",
+      "year": 2022,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "heweiwenhua",
+      "title": "何谓文化",
+      "author": "余秋雨",
+      "year": 2012,
+      "genre": "文化随笔"
+    },
+    {
+      "id": "shanhezhishu",
+      "title": "山河之书",
+      "author": "余秋雨",
+      "year": 2013,
+      "genre": "散文"
+    },
+    {
+      "id": "fangsiji",
+      "title": "房思琪的初恋乐园",
+      "author": "林奕含",
+      "year": 2017,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "chenmodeduoshu",
+      "title": "沉默的大多数",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "杂文"
+    },
+    {
+      "id": "xusanguan",
+      "title": "许三观卖血记",
+      "author": "余华",
+      "year": 1996,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "huangjinshidai",
+      "title": "黄金时代",
+      "author": "王小波",
+      "year": 1994,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "hulanhezhuan",
+      "title": "呼兰河传",
+      "author": "萧红",
+      "year": 1941,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wodealetai",
+      "title": "我的阿勒泰",
+      "author": "李娟",
+      "year": 2010,
+      "genre": "散文"
+    },
+    {
+      "id": "musilindezangli",
+      "title": "穆斯林的葬礼",
+      "author": "霍达",
+      "year": 1988,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "beijingfayuansi",
+      "title": "北京法源寺",
+      "author": "李敖",
+      "year": 1991,
+      "genre": "历史小说"
+    },
+    {
+      "id": "zaixiyuzhonghuhan",
+      "title": "在细雨中呼喊",
+      "author": "余华",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "fengrufeitun",
+      "title": "丰乳肥臀",
+      "author": "莫言",
+      "year": 1996,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zhongguozailiangzhuang",
+      "title": "中国在梁庄",
+      "author": "梁鸿",
+      "year": 2010,
+      "genre": "非虚构"
+    },
+    {
+      "id": "qiwang",
+      "title": "棋王",
+      "author": "阿城",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "balanganpaidan",
+      "title": "把栏杆拍遍",
+      "author": "梁衡",
+      "year": 2002,
+      "genre": "散文"
+    },
+    {
+      "id": "yelusaleng",
+      "title": "耶路撒冷",
+      "author": "徐则臣",
+      "year": 2014,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "renjiancaomu",
+      "title": "人间草木",
+      "author": "汪曾祺",
+      "year": 2006,
+      "genre": "散文"
+    },
+    {
+      "id": "canxuesanwen",
+      "title": "残雪散文",
+      "author": "残雪",
+      "year": 2000,
+      "genre": "散文"
+    }
+  ],
+  [
+    {
+      "id": "yibanhuoyan",
+      "title": "一半是火焰，一半是海水",
+      "author": "王朔",
+      "year": 1986,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "maqiaocidian",
+      "title": "马桥词典",
+      "author": "韩少功",
+      "year": 1996,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "yaoyuandejiushizhu",
+      "title": "遥远的救世主",
+      "author": "豆豆",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "luotuoxiangzi",
+      "title": "骆驼祥子",
+      "author": "老舍",
+      "year": 1939,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "sishitongtang",
+      "title": "四世同堂",
+      "author": "老舍",
+      "year": 1944,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "yueyaer",
+      "title": "月牙儿",
+      "author": "老舍",
+      "year": 1935,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "jia",
+      "title": "家",
+      "author": "巴金",
+      "year": 1931,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "hanye",
+      "title": "寒夜",
+      "author": "巴金",
+      "year": 1947,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qiu",
+      "title": "秋",
+      "author": "巴金",
+      "year": 1940,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shengschang",
+      "title": "生死场",
+      "author": "萧红",
+      "year": 1935,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "shangshijie",
+      "title": "商市街",
+      "author": "萧红",
+      "year": 1936,
+      "genre": "散文"
+    },
+    {
+      "id": "xiaochengsanyue",
+      "title": "小城三月",
+      "author": "萧红",
+      "year": 1941,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huiyiluxunxiansheng",
+      "title": "回忆鲁迅先生",
+      "author": "萧红",
+      "year": 1940,
+      "genre": "散文"
+    },
+    {
+      "id": "shoujie",
+      "title": "受戒",
+      "author": "汪曾祺",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "danaojishi",
+      "title": "大淖记事",
+      "author": "汪曾祺",
+      "year": 1981,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wanfanhuaji",
+      "title": "晚饭花集",
+      "author": "汪曾祺",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "shuwang",
+      "title": "树王",
+      "author": "阿城",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "haiziwang",
+      "title": "孩子王",
+      "author": "阿城",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "biandifengliu",
+      "title": "遍地风流",
+      "author": "阿城",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "weinisiriji",
+      "title": "威尼斯日记",
+      "author": "阿城",
+      "year": 1997,
+      "genre": "散文"
+    },
+    {
+      "id": "bababa",
+      "title": "爸爸爸",
+      "author": "韩少功",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "shannanshuibei",
+      "title": "山南水北",
+      "author": "韩少功",
+      "year": 2006,
+      "genre": "散文"
+    },
+    {
+      "id": "shanshangdexiaowu",
+      "title": "山上的小屋",
+      "author": "残雪",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huangnijie",
+      "title": "黄泥街",
+      "author": "残雪",
+      "year": 1986,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wuxiangjie",
+      "title": "五香街",
+      "author": "残雪",
+      "year": 1988,
+      "genre": "长篇小说"
+    }
+  ],
+  [
+    {
+      "id": "baiyinshidai",
+      "title": "白银时代",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qingtongshidai",
+      "title": "青铜时代",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wodejingshenjiayuan",
+      "title": "我的精神家园",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "杂文"
+    },
+    {
+      "id": "xiongdi",
+      "title": "兄弟",
+      "author": "余华",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "diqitian",
+      "title": "第七天",
+      "author": "余华",
+      "year": 2013,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wencheng",
+      "title": "文城",
+      "author": "余华",
+      "year": 2021,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shengsipilao",
+      "title": "生死疲劳",
+      "author": "莫言",
+      "year": 2006,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "tanxiangxing",
+      "title": "檀香刑",
+      "author": "莫言",
+      "year": 2001,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wa",
+      "title": "蛙",
+      "author": "莫言",
+      "year": 2009,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "tiantangsuantaizhige",
+      "title": "天堂蒜薹之歌",
+      "author": "莫言",
+      "year": 1988,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "feidu",
+      "title": "废都",
+      "author": "贾平凹",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "fuzao",
+      "title": "浮躁",
+      "author": "贾平凹",
+      "year": 1987,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "gulu",
+      "title": "古炉",
+      "author": "贾平凹",
+      "year": 2011,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shanben",
+      "title": "山本",
+      "author": "贾平凹",
+      "year": 2018,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wobushipanJinlian",
+      "title": "我不是潘金莲",
+      "author": "刘震云",
+      "year": 2012,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shouji",
+      "title": "手机",
+      "author": "刘震云",
+      "year": 2003,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "yidijimao",
+      "title": "一地鸡毛",
+      "author": "刘震云",
+      "year": 1991,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "yumi",
+      "title": "玉米",
+      "author": "毕飞宇",
+      "year": 2003,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "pingyuan",
+      "title": "平原",
+      "author": "毕飞宇",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qingyi",
+      "title": "青衣",
+      "author": "毕飞宇",
+      "year": 2000,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "jinyeyoubaofengxue",
+      "title": "今夜有暴风雪",
+      "author": "梁晓声",
+      "year": 1984,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xuecheng",
+      "title": "雪城",
+      "author": "梁晓声",
+      "year": 1986,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "nianlun",
+      "title": "年轮",
+      "author": "梁晓声",
+      "year": 1992,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zhuangtai",
+      "title": "装台",
+      "author": "陈彦",
+      "year": 2015,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xiju",
+      "title": "喜剧",
+      "author": "陈彦",
+      "year": 2021,
+      "genre": "长篇小说"
+    }
+  ],
+  [
+    {
+      "id": "weimanchouguo",
+      "title": "伪满洲国",
+      "author": "迟子建",
+      "year": 2000,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "baixuewuya",
+      "title": "白雪乌鸦",
+      "author": "迟子建",
+      "year": 2010,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "yanhuomanjuan",
+      "title": "烟火漫卷",
+      "author": "迟子建",
+      "year": 2020,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qiuzhuangshandian",
+      "title": "球状闪电",
+      "author": "刘慈欣",
+      "year": 2004,
+      "genre": "科幻"
+    },
+    {
+      "id": "chaoxinxingjiyuan",
+      "title": "超新星纪元",
+      "author": "刘慈欣",
+      "year": 2003,
+      "genre": "科幻"
+    },
+    {
+      "id": "liulangdiqiu",
+      "title": "流浪地球",
+      "author": "刘慈欣",
+      "year": 2008,
+      "genre": "科幻"
+    },
+    {
+      "id": "tianxiang",
+      "title": "天香",
+      "author": "王安忆",
+      "year": 2011,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "kaogongji",
+      "title": "考工记",
+      "author": "王安忆",
+      "year": 2018,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qimengshidai",
+      "title": "启蒙时代",
+      "author": "王安忆",
+      "year": 2007,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "kongshan",
+      "title": "空山",
+      "author": "阿来",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "moguquan",
+      "title": "蘑菇圈",
+      "author": "阿来",
+      "year": 2015,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "heshangbaiying",
+      "title": "河上柏影",
+      "author": "阿来",
+      "year": 2016,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "yigerendecunzhuang",
+      "title": "一个人的村庄",
+      "author": "刘亮程",
+      "year": 1998,
+      "genre": "散文"
+    },
+    {
+      "id": "xutu",
+      "title": "虚土",
+      "author": "刘亮程",
+      "year": 2006,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zaokong",
+      "title": "凿空",
+      "author": "刘亮程",
+      "year": 2010,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "yaoyuandexiangrikui",
+      "title": "遥远的向日葵地",
+      "author": "李娟",
+      "year": 2017,
+      "genre": "散文"
+    },
+    {
+      "id": "dongmuchang",
+      "title": "冬牧场",
+      "author": "李娟",
+      "year": 2012,
+      "genre": "散文"
+    },
+    {
+      "id": "yangdao",
+      "title": "羊道",
+      "author": "李娟",
+      "year": 2010,
+      "genre": "散文"
+    },
+    {
+      "id": "qingtongkuihua",
+      "title": "青铜葵花",
+      "author": "曹文轩",
+      "year": 2005,
+      "genre": "儿童文学"
+    },
+    {
+      "id": "shanyangbuchitianTangcao",
+      "title": "山羊不吃天堂草",
+      "author": "曹文轩",
+      "year": 1991,
+      "genre": "儿童文学"
+    },
+    {
+      "id": "qingtingyan",
+      "title": "蜻蜓眼",
+      "author": "曹文轩",
+      "year": 2016,
+      "genre": "儿童文学"
+    },
+    {
+      "id": "fangfeizhige",
+      "title": "芳菲之歌",
+      "author": "杨沫",
+      "year": 1986,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "yinghuazhige",
+      "title": "英华之歌",
+      "author": "杨沫",
+      "year": 1990,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shanhuhaixiao",
+      "title": "山呼海啸",
+      "author": "曲波",
+      "year": 1977,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qiaolongbiao",
+      "title": "桥隆飙",
+      "author": "曲波",
+      "year": 1979,
+      "genre": "长篇小说"
+    }
+  ],
+  [
+    {
+      "id": "changye",
+      "title": "长夜",
+      "author": "姚雪垠",
+      "year": 1947,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "diqiudehongpiaodai",
+      "title": "地球的红飘带",
+      "author": "魏巍",
+      "year": 1987,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shanJubiji",
+      "title": "山居笔记",
+      "author": "余秋雨",
+      "year": 1995,
+      "genre": "文化随笔"
+    },
+    {
+      "id": "shuanglengchanghe",
+      "title": "霜冷长河",
+      "author": "余秋雨",
+      "year": 1999,
+      "genre": "文化随笔"
+    },
+    {
+      "id": "xingzhewujiang",
+      "title": "行者无疆",
+      "author": "余秋雨",
+      "year": 2001,
+      "genre": "文化随笔"
+    },
+    {
+      "id": "zhongguodalishi",
+      "title": "中国大历史",
+      "author": "黄仁宇",
+      "year": 1993,
+      "genre": "历史"
+    },
+    {
+      "id": "zaikunnanderizi",
+      "title": "在困难的日子里",
+      "author": "路遥",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "lanpaoxiansheng",
+      "title": "蓝袍先生",
+      "author": "陈忠实",
+      "year": 1986,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "tianmuhongchen",
+      "title": "天幕红尘",
+      "author": "豆豆",
+      "year": 2013,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "beipan",
+      "title": "背叛",
+      "author": "豆豆",
+      "year": 2000,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "kanshangquhenmei",
+      "title": "看上去很美",
+      "author": "王朔",
+      "year": 1999,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wanzhu",
+      "title": "顽主",
+      "author": "王朔",
+      "year": 1987,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "dongwuxiongmeng",
+      "title": "动物凶猛",
+      "author": "王朔",
+      "year": 1991,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huiwang",
+      "title": "回望",
+      "author": "金宇澄",
+      "year": 2017,
+      "genre": "非虚构"
+    },
+    {
+      "id": "xipainandai",
+      "title": "洗牌年代",
+      "author": "金宇澄",
+      "year": 2015,
+      "genre": "散文"
+    },
+    {
+      "id": "fangwenmengjing",
+      "title": "访问梦境",
+      "author": "孙甘露",
+      "year": 1986,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xinshizhihan",
+      "title": "信使之函",
+      "author": "孙甘露",
+      "year": 1987,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huxi",
+      "title": "呼吸",
+      "author": "孙甘露",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "chailouji",
+      "title": "拆楼记",
+      "author": "乔叶",
+      "year": 2011,
+      "genre": "非虚构"
+    },
+    {
+      "id": "renzuishu",
+      "title": "认罪书",
+      "author": "乔叶",
+      "year": 2013,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "paobuchuanguozhongguancun",
+      "title": "跑步穿过中关村",
+      "author": "徐则臣",
+      "year": 2008,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "ruguodaxuefengmen",
+      "title": "如果大雪封门",
+      "author": "徐则臣",
+      "year": 2012,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "beishang",
+      "title": "北上",
+      "author": "徐则臣",
+      "year": 2018,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "dalinhexiaolin",
+      "title": "大林和小林",
+      "author": "张天翼",
+      "year": 1933,
+      "genre": "儿童文学"
+    },
+    {
+      "id": "huaweixiansheng",
+      "title": "华威先生",
+      "author": "张天翼",
+      "year": 1938,
+      "genre": "中篇小说"
+    }
+  ],
+  [
+    {
+      "id": "biancheng",
+      "title": "边城",
+      "author": "沈从文",
+      "year": 1934,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "changhe",
+      "title": "长河",
+      "author": "沈从文",
+      "year": 1943,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xiangxingsanji",
+      "title": "湘行散记",
+      "author": "沈从文",
+      "year": 1936,
+      "genre": "散文"
+    },
+    {
+      "id": "qingchengzhilian",
+      "title": "倾城之恋",
+      "author": "张爱玲",
+      "year": 1943,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "jinsuoji",
+      "title": "金锁记",
+      "author": "张爱玲",
+      "year": 1943,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "banshengyuan",
+      "title": "半生缘",
+      "author": "张爱玲",
+      "year": 1948,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "qieqiechengqun",
+      "title": "妻妾成群",
+      "author": "苏童",
+      "year": 1990,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "hean",
+      "title": "河岸",
+      "author": "苏童",
+      "year": 2009,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "mi",
+      "title": "米",
+      "author": "苏童",
+      "year": 1991,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "renmianttaohua",
+      "title": "人面桃花",
+      "author": "格非",
+      "year": 2004,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shanheRumeng",
+      "title": "山河入梦",
+      "author": "格非",
+      "year": 2007,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "chunjinjiangnan",
+      "title": "春尽江南",
+      "author": "格非",
+      "year": 2011,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "lufanyanshi",
+      "title": "陆犯焉识",
+      "author": "严歌苓",
+      "year": 2011,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "fanghua",
+      "title": "芳华",
+      "author": "严歌苓",
+      "year": 2017,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xiaoyiduohe",
+      "title": "小姨多鹤",
+      "author": "严歌苓",
+      "year": 2008,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "baofengzhouyu",
+      "title": "暴风骤雨",
+      "author": "周立波",
+      "year": 1948,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shanxiangjudbian",
+      "title": "山乡巨变",
+      "author": "周立波",
+      "year": 1958,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "sanliwan",
+      "title": "三里湾",
+      "author": "赵树理",
+      "year": 1955,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xiaoerheiJiehun",
+      "title": "小二黑结婚",
+      "author": "赵树理",
+      "year": 1943,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "leiyu",
+      "title": "雷雨",
+      "author": "曹禺",
+      "year": 1934,
+      "genre": "话剧"
+    },
+    {
+      "id": "richu",
+      "title": "日出",
+      "author": "曹禺",
+      "year": 1936,
+      "genre": "话剧"
+    },
+    {
+      "id": "yuanye",
+      "title": "原野",
+      "author": "曹禺",
+      "year": 1937,
+      "genre": "话剧"
+    },
+    {
+      "id": "womensan",
+      "title": "我们仨",
+      "author": "杨绛",
+      "year": 2003,
+      "genre": "散文"
+    },
+    {
+      "id": "ganxiaoliuji",
+      "title": "干校六记",
+      "author": "杨绛",
+      "year": 1981,
+      "genre": "散文"
+    },
+    {
+      "id": "xizao",
+      "title": "洗澡",
+      "author": "杨绛",
+      "year": 1988,
+      "genre": "长篇小说"
+    }
+  ],
+  [
+    {
+      "id": "woyuditan",
+      "title": "我与地坛",
+      "author": "史铁生",
+      "year": 1991,
+      "genre": "散文"
+    },
+    {
+      "id": "wuxubiji",
+      "title": "务虚笔记",
+      "author": "史铁生",
+      "year": 1996,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "jiemi",
+      "title": "解密",
+      "author": "麦家",
+      "year": 2002,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "anan",
+      "title": "暗算",
+      "author": "麦家",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "fengsheng",
+      "title": "风声",
+      "author": "麦家",
+      "year": 2007,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "dongcangji",
+      "title": "东藏记",
+      "author": "宗璞",
+      "year": 2001,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "hongdou",
+      "title": "红豆",
+      "author": "宗璞",
+      "year": 1957,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wuzi",
+      "title": "无字",
+      "author": "张洁",
+      "year": 2002,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "chenzhongdechibang",
+      "title": "沉重的翅膀",
+      "author": "张洁",
+      "year": 1981,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zuzhixindelaideqingnianren",
+      "title": "组织部新来的青年人",
+      "author": "王蒙",
+      "year": 1956,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huodongbianrenxing",
+      "title": "活动变人形",
+      "author": "王蒙",
+      "year": 1987,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "chenhuanshengshangcheng",
+      "title": "陈奂生上城",
+      "author": "高晓声",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "lishundazaowu",
+      "title": "李顺大造屋",
+      "author": "高晓声",
+      "year": 1979,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "meishijia",
+      "title": "美食家",
+      "author": "陆文夫",
+      "year": 1983,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xiaoxiangshenchu",
+      "title": "小巷深处",
+      "author": "陆文夫",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "lvhuashu",
+      "title": "绿化树",
+      "author": "张贤亮",
+      "year": 1984,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "narendeyibanShinvren",
+      "title": "男人的一半是女人",
+      "author": "张贤亮",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "qiaoJiangchangshangrenji",
+      "title": "乔厂长上任记",
+      "author": "蒋子龙",
+      "year": 1979,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "kaituozhe",
+      "title": "开拓者",
+      "author": "蒋子龙",
+      "year": 1979,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "banzhuren",
+      "title": "班主任",
+      "author": "刘心武",
+      "year": 1977,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "zhonggulou",
+      "title": "钟鼓楼",
+      "author": "刘心武",
+      "year": 1985,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "pingyuanshangdemoxi",
+      "title": "平原上的摩西",
+      "author": "双雪涛",
+      "year": 2015,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "feixingjia",
+      "title": "飞行家",
+      "author": "双雪涛",
+      "year": 2017,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "weicheng",
+      "title": "围城",
+      "author": "钱钟书",
+      "year": 1947,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "congwenzizhuan",
+      "title": "从文自传",
+      "author": "沈从文",
+      "year": 1934,
+      "genre": "散文"
+    }
+  ],
+  [
+    {
+      "id": "xiezaireshengbianshang",
+      "title": "写在人生边上",
+      "author": "钱钟书",
+      "year": 1941,
+      "genre": "散文"
+    },
+    {
+      "id": "lihun",
+      "title": "离婚",
+      "author": "老舍",
+      "year": 1933,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "erma",
+      "title": "二马",
+      "author": "老舍",
+      "year": 1929,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "maochengji",
+      "title": "猫城记",
+      "author": "老舍",
+      "year": 1932,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wozheyibeizi",
+      "title": "我这一辈子",
+      "author": "老舍",
+      "year": 1937,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "duanhunqiang",
+      "title": "断魂枪",
+      "author": "老舍",
+      "year": 1935,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "zhenghongqixia",
+      "title": "正红旗下",
+      "author": "老舍",
+      "year": 1962,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "laozhangdezhexue",
+      "title": "老张的哲学",
+      "author": "老舍",
+      "year": 1928,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zhaoyueyue",
+      "title": "赵子曰",
+      "author": "老舍",
+      "year": 1928,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "niutiancizhuan",
+      "title": "牛天赐传",
+      "author": "老舍",
+      "year": 1936,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "longxugou",
+      "title": "龙须沟",
+      "author": "老舍",
+      "year": 1951,
+      "genre": "话剧"
+    },
+    {
+      "id": "miewang",
+      "title": "灭亡",
+      "author": "巴金",
+      "year": 1929,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xinsheng",
+      "title": "新生",
+      "author": "巴金",
+      "year": 1933,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wu",
+      "title": "雾",
+      "author": "巴金",
+      "year": 1931,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "yu",
+      "title": "雨",
+      "author": "巴金",
+      "year": 1933,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "dian",
+      "title": "电",
+      "author": "巴金",
+      "year": 1935,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "qiyuan",
+      "title": "憩园",
+      "author": "巴金",
+      "year": 1944,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "disibingshi",
+      "title": "第四病室",
+      "author": "巴金",
+      "year": 1946,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "mabole",
+      "title": "马伯乐",
+      "author": "萧红",
+      "year": 1941,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "niucheShang",
+      "title": "牛车上",
+      "author": "萧红",
+      "year": 1937,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "qiao",
+      "title": "桥",
+      "author": "萧红",
+      "year": 1936,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "kuangyedehuhan",
+      "title": "旷野的呼喊",
+      "author": "萧红",
+      "year": 1940,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "houhuayuan",
+      "title": "后花园",
+      "author": "萧红",
+      "year": 1940,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "beizhongguo",
+      "title": "北中国",
+      "author": "萧红",
+      "year": 1941,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "lianhuachi",
+      "title": "莲花池",
+      "author": "萧红",
+      "year": 1941,
+      "genre": "中篇小说"
+    }
+  ],
+  [
+    {
+      "id": "yibing",
+      "title": "异秉",
+      "author": "汪曾祺",
+      "year": 1981,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "suihansanyou",
+      "title": "岁寒三友",
+      "author": "汪曾祺",
+      "year": 1981,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "gulisanchen",
+      "title": "故里三陈",
+      "author": "汪曾祺",
+      "year": 1983,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "jiyamingjia",
+      "title": "鸡鸭名家",
+      "author": "汪曾祺",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huangyouluobing",
+      "title": "黄油烙饼",
+      "author": "汪曾祺",
+      "year": 1983,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "jimohennuannuan",
+      "title": "寂寞和温暖",
+      "author": "汪曾祺",
+      "year": 1982,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wanfanhoudegushi",
+      "title": "晚饭后的故事",
+      "author": "汪曾祺",
+      "year": 1983,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "yunzhiqiuxingzhuang",
+      "title": "云致秋行状",
+      "author": "汪曾祺",
+      "year": 1984,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "gupushenchu",
+      "title": "菰蒲深处",
+      "author": "汪曾祺",
+      "year": 1993,
+      "genre": "散文"
+    },
+    {
+      "id": "lvshiji",
+      "title": "旅食集",
+      "author": "汪曾祺",
+      "year": 1992,
+      "genre": "散文"
+    },
+    {
+      "id": "changshiyutongshi",
+      "title": "常识与通识",
+      "author": "阿城",
+      "year": 1999,
+      "genre": "散文"
+    },
+    {
+      "id": "xianhuaxianshuo",
+      "title": "闲话闲说",
+      "author": "阿城",
+      "year": 1997,
+      "genre": "散文"
+    },
+    {
+      "id": "tuoqiang",
+      "title": "脱腔",
+      "author": "阿城",
+      "year": 2015,
+      "genre": "散文"
+    },
+    {
+      "id": "wenhuabushiwuJing",
+      "title": "文化不是味精",
+      "author": "阿城",
+      "year": 2001,
+      "genre": "散文"
+    },
+    {
+      "id": "luoshuhetu",
+      "title": "洛书河图",
+      "author": "阿城",
+      "year": 2014,
+      "genre": "学术随笔"
+    },
+    {
+      "id": "tanyaowuku",
+      "title": "昙曜五窟",
+      "author": "阿城",
+      "year": 2016,
+      "genre": "散文"
+    },
+    {
+      "id": "shicha",
+      "title": "时差",
+      "author": "阿城",
+      "year": 2015,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xiwangmaocaodi",
+      "title": "西望茅草地",
+      "author": "韩少功",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "guiquiai",
+      "title": "归去来",
+      "author": "韩少功",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "nvnvnv",
+      "title": "女女女",
+      "author": "韩少功",
+      "year": 1986,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xiepi",
+      "title": "鞋癖",
+      "author": "韩少功",
+      "year": 1991,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "baogaozhengfu",
+      "title": "报告政府",
+      "author": "韩少功",
+      "year": 1995,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "anshi",
+      "title": "暗示",
+      "author": "韩少功",
+      "year": 2002,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "riyeshu",
+      "title": "日夜书",
+      "author": "韩少功",
+      "year": 2013,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xiugaiguocheng",
+      "title": "修改过程",
+      "author": "韩少功",
+      "year": 2018,
+      "genre": "长篇小说"
+    }
+  ],
+  [
+    {
+      "id": "zuihoudeqingren",
+      "title": "最后的情人",
+      "author": "残雪",
+      "year": 2005,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "bianjiang",
+      "title": "边疆",
+      "author": "残雪",
+      "year": 2008,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xinshijiainqinggushi",
+      "title": "新世纪爱情故事",
+      "author": "残雪",
+      "year": 2013,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "lvfangshixiaojie",
+      "title": "吕芳诗小姐",
+      "author": "残雪",
+      "year": 2011,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "heian dimudeliwu",
+      "title": "黑暗地母的礼物",
+      "author": "残雪",
+      "year": 2015,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "chijiaoyisheng",
+      "title": "赤脚医生",
+      "author": "残雪",
+      "year": 2019,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shuixiang",
+      "title": "水乡",
+      "author": "残雪",
+      "year": 2019,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "linghundechengbao",
+      "title": "灵魂的城堡",
+      "author": "残雪",
+      "year": 1999,
+      "genre": "学术随笔"
+    },
+    {
+      "id": "heitieshidai",
+      "title": "黑铁时代",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "weilaishijie",
+      "title": "未来世界",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "sishuiroqing",
+      "title": "似水柔情",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "dijiutianchang",
+      "title": "地久天长",
+      "author": "王小波",
+      "year": 1982,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "lvmaoshuiguai",
+      "title": "绿毛水怪",
+      "author": "王小波",
+      "year": 1980,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "yexingji",
+      "title": "夜行记",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "hongfuyeben",
+      "title": "红拂夜奔",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "wanshousi",
+      "title": "万寿寺",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xunzhaowushuang",
+      "title": "寻找无双",
+      "author": "王小波",
+      "year": 1997,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shibasuiChumenyuanxing",
+      "title": "十八岁出门远行",
+      "author": "余华",
+      "year": 1987,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xianshiyizhong",
+      "title": "现实一种",
+      "author": "余华",
+      "year": 1988,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "shishiruyan",
+      "title": "世事如烟",
+      "author": "余华",
+      "year": 1988,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "xianxueMeihua",
+      "title": "鲜血梅花",
+      "author": "余华",
+      "year": 1989,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "zhanli",
+      "title": "战栗",
+      "author": "余华",
+      "year": 1991,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "huanghundienanhai",
+      "title": "黄昏里的男孩",
+      "author": "余华",
+      "year": 1995,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wodanxiaorushu",
+      "title": "我胆小如鼠",
+      "author": "余华",
+      "year": 1996,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "meiyouyitiaodaolushichongfude",
+      "title": "没有一条道路是重复的",
+      "author": "余华",
+      "year": 2002,
+      "genre": "散文"
+    }
+  ],
+  [
+    {
+      "id": "shisanbu",
+      "title": "十三步",
+      "author": "莫言",
+      "year": 1989,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "jiuguo",
+      "title": "酒国",
+      "author": "莫言",
+      "year": 1992,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "hongshulin",
+      "title": "红树林",
+      "author": "莫言",
+      "year": 1999,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "sishiyipao",
+      "title": "四十一炮",
+      "author": "莫言",
+      "year": 2003,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "shicaojiazu",
+      "title": "食草家族",
+      "author": "莫言",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "toumingdehongluobo",
+      "title": "透明的红萝卜",
+      "author": "莫言",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "baigouqiuqianjia",
+      "title": "白狗秋千架",
+      "author": "莫言",
+      "year": 1985,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "wanshuderener",
+      "title": "晚熟的人",
+      "author": "莫言",
+      "year": 2020,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "gaoxing",
+      "title": "高兴",
+      "author": "贾平凹",
+      "year": 2007,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "daideng",
+      "title": "带灯",
+      "author": "贾平凹",
+      "year": 2013,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "laosheng",
+      "title": "老生",
+      "author": "贾平凹",
+      "year": 2014,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "jihua",
+      "title": "极花",
+      "author": "贾平凹",
+      "year": 2016,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "zanzuo",
+      "title": "暂坐",
+      "author": "贾平凹",
+      "year": 2020,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "baiye",
+      "title": "白夜",
+      "author": "贾平凹",
+      "year": 1995,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "tumen",
+      "title": "土门",
+      "author": "贾平凹",
+      "year": 1996,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "gaolaozhuang",
+      "title": "高老庄",
+      "author": "贾平凹",
+      "year": 1998,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "huainianlang",
+      "title": "怀念狼",
+      "author": "贾平凹",
+      "year": 2000,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "woshinongmin",
+      "title": "我是农民",
+      "author": "贾平凹",
+      "year": 1998,
+      "genre": "非虚构"
+    },
+    {
+      "id": "wenguyijiuersan",
+      "title": "温故一九四二",
+      "author": "刘震云",
+      "year": 1993,
+      "genre": "非虚构"
+    },
+    {
+      "id": "guxiangtianxiahuanghua",
+      "title": "故乡天下黄花",
+      "author": "刘震云",
+      "year": 1991,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "guxiangxiangchuliuchuan",
+      "title": "故乡相处流传",
+      "author": "刘震云",
+      "year": 1993,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "guxiangmianhehuaduo",
+      "title": "故乡面和花朵",
+      "author": "刘震云",
+      "year": 1998,
+      "genre": "长篇小说"
+    },
+    {
+      "id": "xinbinglian",
+      "title": "新兵连",
+      "author": "刘震云",
+      "year": 1988,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "danwei",
+      "title": "单位",
+      "author": "刘震云",
+      "year": 1989,
+      "genre": "中篇小说"
+    },
+    {
+      "id": "tapou",
+      "title": "塔铺",
+      "author": "刘震云",
+      "year": 1987,
+      "genre": "中篇小说"
+    }
+  ]
+]

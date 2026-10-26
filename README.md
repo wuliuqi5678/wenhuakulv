@@ -11,7 +11,7 @@
 > 截至本文：书目 300 部，作者 67 位，1928—2022 年，12 种体裁，7 个分类。
 > 主题书单 10 份，覆盖 50 部作品、70 个阅读站点；每份导语 300—500 字。
 > 48 部作品有可靠摘句，252 部仍标注“暂无可靠原文摘句”。
-> 前端资源版本：`20261024e`。
+> 前端资源版本：`20261026b`。
 
 ---
 
@@ -54,7 +54,7 @@ npm run dev
 npm test
 ```
 
-会检查 300 本书、67 位作者、10 份书单、书单 book id、导语字数、HTML 站内链接、CSS/JS 文件是否存在，以及全站资源版本是否一致；并回归书库状态切换是否保留日期/重读次数、非法日历日期是否被拒绝。
+会检查 300 本书、67 位作者、10 份书单、书单 book id、导语字数、HTML 站内链接、CSS/JS 文件是否存在，以及全站资源版本是否一致；并检查每本书的 `intro` 为 4—6 段、300—550 个汉字、段内没有完全重复或内容过近的段落，回归书库状态切换是否保留日期/重读次数、非法日历日期是否被拒绝。
 
 ### 端口与监听地址
 
@@ -128,8 +128,9 @@ Express（server.js）
 ├── README.md
 ├── data/                     # 开发期一次性数据整理脚本，不参与站点运行
 │   ├── verify-reading-lists.mjs # 主题书单校验（引用、重复、300—500 字）
-│   ├── verify-site.mjs      # npm test：数据、链接、资源与版本号
-│   └── verify-library-store.mjs # npm test：状态切换保留日期/次数、非法日期
+│   ├── verify-site.mjs      # npm test：数据、intro 段数/字数/重复过近、链接、资源与版本号
+│   ├── verify-library-store.mjs # npm test：状态切换保留日期/次数、非法日期
+│   └── intro-rewrite/       # 300 本书介绍分批重写的输入、校验和合并脚本
 ├── screenshots/              # 开发截图，已 gitignore
 └── public/
     ├── index.html            # 书架首页
@@ -242,7 +243,7 @@ Express（server.js）
         "accent": "#C9A227",
         "style": "frame"               // frame | vertical | numeral | band
       },
-      "intro": ["段落一", "段落二"],     // 必填；当前每条 4 段以上
+      "intro": ["段落一", "段落二"],     // 必填；重写后每条 4—6 段
       "why": "一句话荐语",              // 可选，当前 300 部都有
       "note": "补充说明",               // 可选
       "quotes": [                      // 可选；只收可核实原文
@@ -263,10 +264,26 @@ Express（server.js）
 - `author` 必须和作者表 `name` **逐字一致**，否则作者页关联会断。
 - `genre` 当前取值：`长篇小说`、`中篇小说`、`历史小说`、`历史`、`非虚构`、`散文`、`文化随笔`、`学术随笔`、`杂文`、`话剧`、`儿童文学`、`科幻`。新增体裁要同步 `categories.js`。
 - `intro` 是一个字符串数组，每个元素一段；不要写成一个大字符串。
+- 每段都要带来新信息：人物、情节、版本、写法或文学史位置。**不要用同义改写、合并句或重复段来“丰富”介绍**；需要加长时补具体事实，而不是把前一段换个说法再说一遍。`npm test` 会检查完全重复和内容过近的段落。
 - `quotes` 最多放 1—2 句最有代表性的原文，必须能说出出处。**查不到就留空，不要编。**
 - `cover.style` 四选一；`bg` / `ink` / `accent` 是颜色。
 - `photo` 存在时优先真实照片，加载失败自动退回设计书影。图片放 `public/covers/`，并用相对 `public/` 的路径。
 - CSP 只允许本站图片和 `data:`，不能直接引用外站图片。
+
+### 5.1.1 300 本书介绍重写
+
+`data/intro-rewrite/` 保存分批重写的输入、规范、校验和合并脚本：
+
+```bash
+# 1. 在 batches.json 里按 25 本一批切好 12 批
+# 2. 按 GUIDE.md 写 batch-01.json … batch-12.json
+node data/intro-rewrite/validate.mjs   # 300 本、4—6 段、段内无重复/过近段
+node data/intro-rewrite/merge.mjs      # 校验后合并回 books.json
+```
+
+原则：**先删重复，再补新事实**；宁可少写一句，不要把上一段换个说法。合并后必须再跑 `npm test`。
+
+当前结果（2026-10-26）：300 本全部重写完成；242 本 5 段、58 本 6 段；每本 300—397 个汉字，平均约 329 字；`validate.mjs` 与 `npm test` 均通过。
 
 ### 5.2 `public/data/authors.json`
 
@@ -743,14 +760,14 @@ CSP 当前允许站内资源、`data:` 图片、内联脚本/样式；**不允�
 
 ## 九、测试与验收
 
-已有静态检查，GitHub Actions 发布前也会跑 `data/verify-site.mjs`；但还没有浏览器 E2E。常用检查：
+已有静态检查，但还没有浏览器 E2E/CI。常用检查：
 
 ```bash
 npm test
 # 若 PowerShell 禁止 npm.ps1，可直接运行：
 node data/verify-site.mjs
 node data/verify-library-store.mjs
-# 等价于：书目/作者/书单数量、书单引用、导语字数、HTML 站内链接、资源与版本号、书库状态回归
+# 等价于：书目/作者/书单数量、书单引用、导语字数、书目 intro 4—6 段/300—550 字/完全重复与过近段、HTML 站内链接、资源与版本号、书库状态回归
 
 # 语法
 node --check server.js
@@ -784,6 +801,8 @@ curl -i -X POST http://127.0.0.1:3000/api/chat -H "Content-Type: application/jso
 - [ ] 「书单」导航进入 `reading-lists.html` 显示 10 条路线；每张卡的三枚书影、导语摘要、起点/终点正确。
 - [ ] 打开任意书单，导语为 300—500 字，阅读路径按编号排列，起点/终点标记正确，点击书影/书名能进作品页。
 - [ ] 作品页「收录于主题书单」显示该书的书单位置；不在书单里的书不显示这一节。
+- [ ] 300 本作品的介绍均为 4—6 段，段内没有完全重复或同义复述；抽读 20 本确认每段都带来新信息。
+- [ ] 《老张的哲学》为 4 段：版本与连载、故事、讽刺方法、文学史位置，不靠复述凑长度。
 - [ ] 书单页「下一条路线」可从第 10 条绕回第 1 条；未知 `?id=` 显示友好提示。
 - [ ] 书单索引可以按路线名、主题、作者、书名搜索；`双雪涛` 能找到东北叙事，结果数和空状态正确。
 - [ ] 书单索引显示书库进度：例如已读 1/5、下一站/接着读；详情页每站显示在读/已读/想读/未加入，顶部进度条同步。
@@ -831,6 +850,7 @@ sessionStorage.clear();
 | 分类页少书 | 新 `genre` 没加入 `categories.js` |
 | 书单卡片少书 / 控制台警告 | `reading-lists.json` 引用了不存在的 book id，或 id 拼错 |
 | 书单详情显示“没有找到” | URL 的 `?id=` 与 `reading-lists.json` 的 `id` 不一致 |
+| 作品介绍出现重复段落 | `intro` 里不要放同义改写或合并段；先删重复，再补新事实（版本、人物、写法）。`npm test` 会拒绝完全重复和内容过近的段落 |
 | 书单导语太长/太短 | 按 5.4 的命令统计汉字数；300—500 字，不要把书目简介直接复制进来 |
 | 书单进度不更新 | 书库记录以 book id 关联书籍；确认书目 id 没改。从书页/书库返回时会读一次 `wk_library_v1` |
 | 首页「只看想读」是空的 | 书库的 `wish` 条目为空；先到书页或书库页加入想读 |
@@ -862,7 +882,7 @@ sessionStorage.clear();
 - **防剧透不是章节级数据库**：站点没有按章节切分的情节摘要，防剧透模式只能拒绝注入完整简介/名句/结局，靠 prompt 约束模型；不能保证百分百不说漏。
 - **书库推荐只使用「已读 / 想读」**：这是有意的隐私边界；“在读”和笔记/日期不参与推荐。
 - **书库只在本地**：没有账号、云同步、导出/导入（可后续加 JSON 导出）。
-- **有静态检查与发布前 CI，但没有浏览器 E2E**：`npm test` 覆盖数据、链接、资源、版本和书库状态回归；Pages 工作流发布前会再跑一次站点自检；CLS、焦点顺序、日期选择器、AI 交互仍靠手工/Playwright 回归。
+- **有静态检查，但没有浏览器 E2E/CI**：`npm test` 覆盖数据、链接、资源、版本和书库状态回归；CLS、焦点顺序、日期选择器、AI 交互仍靠手工/Playwright 回归。
 - **AI 是本地代理**：需要外网和 Key；服务重启会清空会话；没有多用户权限。
 - **CSP 仍保留 `'unsafe-inline'`**：页面有内联启动脚本和样式；要收紧需要先移除内联脚本并加 nonce/hash。
 - **封面是版式再创作**，不是原书扫描；真实书照当前为 0 张。
@@ -881,13 +901,19 @@ sessionStorage.clear();
 
 ### 12.1 推到 GitHub
 
-本地仓库已经有提交历史，缺的只是远端。第一次发布：
+本地仓库已经有提交历史，远端也已配好（`origin` → `https://github.com/wuliuqi5678/wenhuakulv.git`）。日常更新只要三步：
 
-1. 在 GitHub 网页右上角 **+ → New repository** 新建空仓库：
-   - **Repository name** 填 `wenhuakulv`；
-   - 可见性选 **Public**（公开仓库才能免费开 Pages；Private 需要付费方案）；
-   - **不要**勾选 Add a README / .gitignore / license，否则第一次 push 会冲突。
-2. 回到本地，设置提交作者（只对这个仓库生效）并绑定远端：
+```bash
+npm test          # 数据、intro 段数/字数/重复、站内链接、资源版本
+git add -A
+git commit -m "这次改了什么"
+git push
+```
+
+首次从零发布时的完整步骤（备查）：
+
+1. 在 GitHub 网页新建空仓库（**不要**勾选自动生成 README / .gitignore）。
+2. 设置提交作者并绑定远端，然后推送：
 
 ```bash
 git config user.name "wuliuqi5678"
@@ -896,21 +922,20 @@ git remote add origin https://github.com/wuliuqi5678/wenhuakulv.git
 git push -u origin main
 ```
 
-3. 第一次 push 会弹出浏览器让你登录 GitHub（Git Credential Manager）。登录后凭据存进 Windows 凭据管理器，之后 push 不再询问。
-
 说明：
 
-- `.env`（含 DeepSeek Key）已被 `.gitignore` 忽略，不会上传；不要用 `git add -f .env`。
-- `node_modules/`、`.pnpm-store/`、`screenshots/` 同样不会上传。
-- `data/` 是数据整理与校验脚本，会一起提交；`npm test` 与 CI 只用到 `data/verify-*.mjs`。
-- 公开仓库意味着 `public/data/` 里的书目、作者、摘句全部公开——这本来就是网站要给人看的内容。
-- 如果曾经把真实 Key 提交过，先去 DeepSeek 控制台作废重发，再清理历史；只删当前文件不够。
+- `.env` 已被 `.gitignore` 忽略，不要用 `git add -f .env`。
+- `node_modules/`、`.pnpm-store/`、`screenshots/` 不会入库。
+- `data/`（含 `intro-rewrite/` 的分批输入、校验与合并脚本）会一起提交。
+- 如果仓库之前误传过真实 Key，立刻去 DeepSeek 控制台作废并重新生成，再清理历史；不要只删当前文件。
+- 公开仓库意味着 `public/data/` 里的书目、作者、摘句全部公开，这是网站本身的内容。
+- 本机直连 `github.com` 需要代理时，这个仓库已配置 `http.https://github.com.proxy`；代理换端口后要同步改。
 
 ### 12.2 方案 A：GitHub Pages（免费，只展示静态站）
 
-适合“让别人浏览书目 / 详情 / 书单 / 书库”，**AI 不可用**（AI 需要 Node 后端）。
+适合“让别人浏览书目/详情/书库”，**AI 不可用**（AI 需要 Node 后端）。
 
-仓库里已经准备好：
+项目已经准备好：
 
 - `.github/workflows/pages.yml`：push 到 `main` 后自动把 `public/` 发布到 Pages；发布前先跑 `node data/verify-site.mjs`，数据或站内链接有问题就不发布；
 - `public/.nojekyll`：避免 Jekyll 处理静态资源；
@@ -920,24 +945,23 @@ git push -u origin main
 
 启用步骤：
 
-1. 按 12.1 推完代码。
+1. 把仓库推到 GitHub。
 2. 打开仓库 **Settings → Pages**。
 3. **Build and deployment → Source** 选 **GitHub Actions**（不要选 “Deploy from a branch”）。
-4. 打开 **Actions** 标签，等 `Deploy static site to GitHub Pages` 跑完。如果第一次因为 Pages 还没开启而失败，点 **Re-run all jobs** 再来一次。
-5. 访问：
+4. 打开 **Actions** 标签，等 `Deploy static site to GitHub Pages` 跑完；如果第一次因为 Pages 还没开启而失败，点 **Re-run all jobs**。
+5. 部署完成后访问：
 
 ```text
 https://wuliuqi5678.github.io/wenhuakulv/
 ```
 
-之后每次 `git push` 到 `main`，Actions 都会自动重新发布，一般 1 分钟内生效。
-
 注意：
 
-- Pages 不执行 `server.js`，所以 `/api/health`、CSP、gzip、Node 版 404 都不生效；静态页面本身照常访问。
-- 书库（已读 / 想读、笔记、日期）存在访客自己的浏览器 localStorage 里，不会上传到服务器。
-- 想绑自定义域名：在 **Settings → Pages → Custom domain** 填域名并配 DNS；同时要改 `ai.js` 里的 `IS_STATIC_HOST` 判断，否则 AI 按钮会重新出现。
-- 打开是 404 时，先确认 Actions 成功、Pages Source 是 GitHub Actions、仓库里确实有 `public/index.html`。
+- Pages 上 AI 入口会隐藏；要 AI 就用方案 B。
+- Pages 不执行 `server.js`，所以 `/api/health`、CSP、gzip、Node 版 404 都不生效；静态页面本身仍可正常访问。
+- 书库（已读 / 想读、笔记、日期）存在访客自己的浏览器 localStorage 里，不会上传。
+- 自定义域名时 `*.github.io` 检测不成立，AI 按钮会出现但接口不存在；需要改 `ai.js` 里的 `IS_STATIC_HOST` 判断或改用方案 B。
+- 如果 Pages 显示 404，先确认 Actions 成功、Pages Source 是 GitHub Actions，而不是 “Deploy from a branch”。
 
 ### 12.3 方案 B：Render / Railway（完整站点 + AI）
 
@@ -964,7 +988,7 @@ https://wuliuqi5678.github.io/wenhuakulv/
 
 ### 12.4 我的建议
 
-- **只是让别人看书、看介绍**：GitHub Pages，零成本，最简单（本站已按这个方案配置，地址见文首）。
+- **只是让别人看书、看介绍**：GitHub Pages，零成本，最简单。
 - **要保留 AI 助手**：Render/Railway，且不要把 AI 直接裸露在公网；先加访问控制，或暂时不配 Key。
 - 不要为了“能跑”把 `server.js` 改成纯前端；AI Key 一旦进浏览器就必然泄露。
 
@@ -1016,4 +1040,4 @@ https://wuliuqi5678.github.io/wenhuakulv/
 | L8 错误文案/无测试入口 | 部分修 | 增加 `npm test` 静态检查、书单校验与书库状态回归；仍未做浏览器 E2E |
 | L9 日期/Node/压缩/密钥 | 部分修 | 严格日历、禁用未来、`gzip;q=0`、Node ≥20；密钥轮换仍靠部署流程 |
 
-仍未做的：CSP 严格化、浏览器 E2E、自定义域名下的 AI 入口检测、公网 AI 登录或访问令牌。
+仍未做的：CSP 严格化、浏览器 E2E/CI、GitHub Pages 自定义域/子路径下的静态嵌套 404、公网 AI 登录或访问令牌。
