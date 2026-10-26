@@ -42,7 +42,9 @@ async function main() {
     }
     el.grid.replaceChildren(frag);
   } catch (error) {
-    el.grid.innerHTML = `<div class="empty"><b>作者数据加载失败</b>${esc(error.message)}<br>请确认通过本地服务器访问本页。</div>`;
+    const reason = error instanceof TypeError ? "连不上本地数据，请确认服务已启动。" : error.message;
+    if (el.meta) el.meta.textContent = "作者数据加载失败";
+    el.grid.innerHTML = `<div class="empty"><b>作者数据加载失败</b>${esc(reason)}<br>请通过本地服务器访问本页。</div>`;
   }
 }
 

@@ -21,6 +21,17 @@ if not exist "node_modules\express\package.json" (
   exit /b 1
 )
 
+rem 端口已被占用时，直接打开现有站点，避免重复启动
+netstat -ano | findstr /C:":3000" | findstr /C:"LISTENING" >nul
+if not errorlevel 1 (
+  echo.
+  echo 服务已经在运行：http://127.0.0.1:3000
+  echo 无需重复启动，正在为你打开浏览器...
+  start "" "http://127.0.0.1:3000"
+  pause
+  exit /b 0
+)
+
 echo 正在启动本地服务器...
 echo.
 echo   文化苦旅   http://127.0.0.1:3000
@@ -37,5 +48,6 @@ node server.js
 rem Restore local codepage for the Chinese messages below
 chcp 936 >nul
 echo.
-echo 服务已停止。
+echo 服务已退出。
+echo 如果网站仍能打开，说明端口被另一个实例占用，无需重复启动。
 pause

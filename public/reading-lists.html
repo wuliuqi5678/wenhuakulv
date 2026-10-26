@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主题书单 · 文化苦旅</title>
+<meta name="description" content="十条编辑阅读路径：东北叙事、女性写作、先锋小说、乡土百年、当代文学史与入门书单。每条都说明为什么放在一起、先读哪本、读完接哪本。">
+<meta property="og:title" content="主题书单 · 文化苦旅">
+<meta property="og:description" content="十条编辑阅读路径，把书读成一条可以走的路。">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=20261026a">
+</head>
+<body>
+
+<a class="skip-link" href="#reading-lists-grid">跳到书单</a>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="back-btn" href="index.html" data-back aria-label="返回上一页">
+        <span class="back-btn__arrow" aria-hidden="true">←</span><span class="back-btn__label">返回</span>
+      </a>
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="reading-lists.html">书单</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="library.html">书库</a>
+        <a href="index.html#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell" id="reading-lists">
+  <section class="lists-hero" aria-labelledby="lists-title">
+    <p class="crumb"><a href="index.html">书架</a><span aria-hidden="true">/</span><span>主题书单</span></p>
+    <div class="lists-hero__grid">
+      <div class="lists-hero__main">
+        <p class="lists-hero__kicker">READING PATHS / 编辑路线</p>
+        <h1 id="lists-title">把书读成<br class="lists-hero__break">一条路</h1>
+        <p class="lists-hero__lead" id="lists-lead">
+          这不是十份排行榜，而是十条有人走过的阅读路线。每条都说明为什么放在一起、先读哪本、读完接哪本。
+        </p>
+        <p class="lists-hero__meta" id="lists-meta" aria-live="polite">正在整理路线…</p>
+      </div>
+      <aside class="lists-hero__aside" aria-hidden="true">
+        <span class="lists-hero__seal">路</span>
+        <p class="lists-hero__motto">先读哪本，<br>读完接哪本。</p>
+        <span class="lists-hero__rule"></span>
+        <p class="lists-hero__latin">ONE BOOK<br>LEADS TO ANOTHER</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="lists-section" aria-labelledby="lists-all-title">
+    <div class="lists-section__head">
+      <div>
+        <p class="lists-section__kicker">十条路线</p>
+        <h2 id="lists-all-title">从任意一条开始</h2>
+      </div>
+      <p>不用按顺序全部读完。选一条此刻最想走的路，从第一本开始；也可以先读其中一本，再决定要不要回头补全程。</p>
+    </div>
+    <div class="lists-search">
+      <label class="lists-search__label" for="lists-search">搜路线</label>
+      <input id="lists-search" type="search" placeholder="路线名、主题、作者、书名……" autocomplete="off" aria-controls="reading-lists-grid">
+      <span class="lists-search__count" id="lists-search-count" aria-live="polite">10 条路线</span>
+    </div>
+    <ul class="lists-grid" id="reading-lists-grid"></ul>
+    <div class="lists-search-empty" id="lists-search-empty" hidden>
+      <p>没有找到匹配的路线。换个路线名、主题、作者或书名试试。</p>
+      <button class="btn btn--ghost" type="button" id="lists-search-reset">清除搜索</button>
+    </div>
+    <p class="lists-error" id="lists-error" hidden></p>
+  </section>
+
+  <section class="lists-note" aria-label="书单说明">
+    <p class="lists-note__mark" aria-hidden="true">编</p>
+    <div>
+      <h2>这些路线是怎么排的</h2>
+      <p>
+        书单只从站内三百部作品中选取，不为了凑数虚构条目。每份路线都有一篇三百到五百字的导语，
+        说明入选理由、起读点和衔接方式；作品页也会标出它出现在哪些书单里。
+        同一本书可以在不同路线中承担不同角色——这不是重复，而是它本来就有多重入口。
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 编辑书单 · 本地运行</span>
+    </div>
+    <p class="site-footer__note">
+      书单为编辑阅读建议，不是权威榜单；书目信息仅作介绍之用，书影为版式再创作。
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+    本页需要 JavaScript 才能读取主题书单。请在浏览器中启用脚本后刷新。
+  </p>
+</noscript>
+
+<script type="module" src="js/ui.js?v=20261026a"></script>
+<script type="module" src="js/reading-lists-page.js?v=20261026a"></script>
+<script type="module" src="js/ai.js?v=20261026a"></script>
+</body>
+</html>

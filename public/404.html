@@ -7,8 +7,31 @@
 <meta name="description" content="这一页不在书架上。回到文化苦旅的首页继续逛。">
 <meta name="theme-color" content="#F3EEE4">
 <meta name="robots" content="noindex">
+<script>
+  /* 本地服务在任意深度返回 404.html 时，把相对资源拉回站点根目录。
+     GitHub Pages 的项目站点多一层 /仓库名/，同样要把 base 指到仓库根，
+     否则 /仓库名/a/b 的 404 会去请求 /仓库名/a/css/site.css。 */
+  (function () {
+    try {
+      var host = location.hostname;
+      var isLocal = host === "127.0.0.1" || host === "localhost" || host === "::1" || host === "[::1]";
+      if (isLocal) {
+        var localBase = document.createElement("base");
+        localBase.href = "/";
+        document.head.prepend(localBase);
+        return;
+      }
+      if (/(?:^|\.)github\.io$/i.test(host)) {
+        var segment = location.pathname.split("/").filter(Boolean)[0];
+        var base = document.createElement("base");
+        base.href = segment ? "/" + segment + "/" : "/";
+        document.head.prepend(base);
+      }
+    } catch (e) {}
+  })();
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/site.css?v=20261026a">
 </head>
 <body>
 
@@ -24,11 +47,17 @@
       </a>
     </div>
     <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
       <nav class="site-nav" aria-label="主导航">
         <a href="index.html">书架</a>
         <a href="categories.html">分类</a>
+        <a href="reading-lists.html">书单</a>
         <a href="roam.html">漫游</a>
         <a href="authors.html">作者</a>
+        <a href="library.html">书库</a>
+        <a href="index.html#about">关于</a>
       </nav>
     </div>
   </div>
@@ -55,5 +84,7 @@
   </div>
 </footer>
 
+  <script type="module" src="js/ui.js?v=20261026a"></script>
+  <script type="module" src="js/ai.js?v=20261026a"></script>
 </body>
 </html>

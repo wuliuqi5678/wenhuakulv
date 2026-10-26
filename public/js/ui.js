@@ -1,192 +1,328 @@
 /** Shared navigation and small interface interactions. */
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const originKey = "wk_book_origin";
-let returning = false;
-let returnObserver = null;
-let returnTimer = 0;
+// 返回转场的细节帧倍率：15 段 → 45 段，时长同步 ×3
+const RETURN_DETAIL = 3;
+const CLOSE_FRAMES = 15 * RETURN_DETAIL;
+const CLOSE_MS = 240 * RETURN_DETAIL;
+
+let closing = false;
 
 function internalReferrer() {
-  try { return Boolean(document.referrer) && new URL(document.referrer).origin === location.origin; }
-  catch { return false; }
+  try {
+    return Boolean(document.referrer) && new URL(document.referrer).origin === location.origin;
+  } catch {
+    return false;
+  }
+}
+
+/** 兼容 GitHub Pages 的项目子路径：/repo/ 也视为书架首页。 */
+function isHomePath(pathname) {
+  return pathname === "/" || pathname.endsWith("/index.html") || pathname.endsWith("/");
 }
 
 function navigateBack(fallback) {
-  try { sessionStorage.setItem("wk_splash", "1"); } catch {}
+  try {
+    sessionStorage.setItem("wk_splash", "1");
+  } catch {}
   if (history.length > 1 && internalReferrer()) history.back();
   else if (fallback) location.href = fallback;
 }
 
-function readOrigin() {
-  try { return JSON.parse(sessionStorage.getItem(originKey) || "null"); }
-  catch { return null; }
+/** 回到书架时：如果浏览器没恢复滚动位置，就回到点开那本书的地方，并让书卡轻轻落定。 */
+function revealShelf() {
+  const root = document.documentElement;
+  if (!root.classList.contains("is-returning")) return;
+  root.classList.add("is-return-ready");
+  window.setTimeout(() => root.classList.remove("is-returning", "is-return-ready"), 700);
 }
 
-function routeKey(value) {
-  const url = new URL(value, location.href);
-  return `${url.pathname}${url.search}${url.hash}`;
-}
+/** 单独克隆一枚书影，从视口中央缩回书架卡片；原卡片在动画结束前隐藏。 */
+function playShelfReturn(link, coverRect) {
+  if (reducedMotion.matches) return false;
+  const real = link.querySelector(".cover");
+  if (!real) return false;
 
-function animateBookReturn(fallback) {
-  const origin = readOrigin();
-  const currentId = new URLSearchParams(location.search).get("id");
-  const sourceCover = document.querySelector(".detail__cover .cover");
-  let safeOriginHref = "";
-  try {
-    const candidate = new URL(origin?.href || "", location.href);
-    if (candidate.origin === location.origin) safeOriginHref = candidate.href;
-  } catch {}
-  if (origin?.id !== currentId || !safeOriginHref || !sourceCover) return false;
+  const target = real.getBoundingClientRect();
+  if (!target.width || !target.height) return false;
 
-  const rect = sourceCover.getBoundingClientRect();
-  origin.returnRect = { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
-  origin.returnViewport = { width: innerWidth, height: innerHeight };
-  try { sessionStorage.setItem(originKey, JSON.stringify(origin)); } catch {}
-  navigateBack(safeOriginHref || fallback);
-  return true;
-}
+  const saved = coverRect && Number(coverRect.width) > 40 && Number(coverRect.height) > 40 ? coverRect : null;
+  const startWidth = saved ? Number(saved.width) : Math.min(300, Math.max(140, innerWidth * 0.28));
+  const startHeight = saved ? Number(saved.height) : (target.height / target.width) * startWidth;
+  const startLeft = saved ? Number(saved.left) : (innerWidth - startWidth) / 2;
+  const startTop = saved ? Number(saved.top) : (innerHeight - startHeight) / 2;
 
-function findOriginCard(origin) {
-  return [...document.querySelectorAll("a.book__link")].find((link) => {
-    try { return new URL(link.href, location.href).searchParams.get("id") === origin.id; }
-    catch { return false; }
-  });
-}
+  const clone = real.cloneNode(true);
+  clone.classList.add("return-book");
+  clone.style.left = `${startLeft}px`;
+  clone.style.top = `${startTop}px`;
+  clone.style.width = `${startWidth}px`;
+  clone.style.height = `${startHeight}px`;
 
-function finishReturn(observer, target) {
-  observer?.disconnect();
-  clearTimeout(returnTimer);
-  returnObserver = null;
-  document.body.style.contain = "";
-  if (target) target.style.visibility = target.dataset.returnVisibility || "";
-  document.querySelectorAll(".page-return").forEach((node) => node.remove());
-  try { sessionStorage.removeItem(originKey); } catch {}
-}
+  real.style.visibility = "hidden";
+  document.body.appendChild(clone);
 
-function playReturn(origin, targetLink) {
-  const target = targetLink?.querySelector(".cover");
-  const saved = origin.returnRect;
-  const viewport = origin.returnViewport;
-  if (!target || !saved?.width || !saved?.height || !viewport?.width || !viewport?.height) return false;
-  const from = {
-    left: (saved.left / viewport.width) * innerWidth,
-    top: (saved.top / viewport.height) * innerHeight,
-    width: (saved.width / viewport.width) * innerWidth,
-    height: (saved.height / viewport.height) * innerHeight,
+  const dx = target.left - startLeft;
+  const dy = target.top - startTop;
+  const scale = target.width / startWidth;
+
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    clone.remove();
+    real.style.visibility = "";
   };
-  const to = target.getBoundingClientRect();
-  if (!to.width || !to.height) return false;
 
-  const overlay = document.createElement("div");
-  overlay.className = "page-return";
-  const cover = target.cloneNode(true);
-  cover.classList.add("page-turn__book", "page-return__cover");
-  Object.assign(cover.style, {
-    left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px`,
-  });
-  overlay.appendChild(cover);
-  document.body.appendChild(overlay);
-  target.dataset.returnVisibility = target.style.visibility;
-  target.style.visibility = "hidden";
-
-  const dx = to.left - from.left;
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-  const scale = to.width / from.width;
-  const animation = cover.animate([
-    { transform: "translate(0, 0) scale(1) rotateY(0deg)", filter: "brightness(1.06)", offset: 0 },
-    { transform: `translate(${dx * 0.42}px, ${dy * 0.42}px) scale(${1 + (scale - 1) * 0.42}) rotateY(-5deg)`, filter: "brightness(1.02)", offset: 0.42 },
-    { transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotateY(0deg)`, filter: "brightness(1)", offset: 1 },
-  ], { duration: reducedMotion.matches ? 1 : 900, easing: "cubic-bezier(0.2, 0.78, 0.18, 1)", fill: "forwards" });
-  animation.finished.then(() => finishReturn(null, target)).catch(() => finishReturn(null, target));
+  try {
+    const frames = [];
+    for (let index = 0; index <= CLOSE_FRAMES; index += 1) {
+      const t = index / CLOSE_FRAMES;
+      const eased = t * t * (3 - 2 * t);
+      frames.push({
+        offset: t,
+        transform: `translate3d(${(dx * eased).toFixed(3)}px, ${(dy * eased).toFixed(3)}px, 0) scale(${(
+          1 + (scale - 1) * eased
+        ).toFixed(5)})`,
+        opacity: 1,
+      });
+    }
+    const animation = clone.animate(frames, {
+      duration: 560,
+      easing: "linear",
+      fill: "forwards",
+    });
+    animation.finished.then(cleanup).catch(cleanup);
+  } catch {
+    cleanup();
+  }
+  window.setTimeout(cleanup, 900);
   return true;
 }
 
-function resumeBookReturn() {
-  if (returnObserver) return;
-  const origin = readOrigin();
-  if (!origin?.returnRect || !origin?.href) return;
-  let onSource = false;
-  try { onSource = routeKey(location.href) === routeKey(origin.href); } catch {}
-  if (!onSource) {
-    // Preserve the origin while paging between detail pages; clear it once another route is reached.
-    const currentId = new URLSearchParams(location.search).get("id");
-    if (currentId !== origin.id) {
-      try { sessionStorage.removeItem(originKey); } catch {}
+function restoreReturnTarget(attempt = 0) {
+  let raw = "";
+  try {
+    raw = sessionStorage.getItem("wk_return") || "";
+  } catch {
+    revealShelf();
+    return;
+  }
+  if (!raw) {
+    revealShelf();
+    return;
+  }
+
+  const isShelf = isHomePath(location.pathname);
+  // 在详情页等其它页面不要清掉标记，等回到书架再消费
+  if (!isShelf) return;
+
+  let data = null;
+  try { data = JSON.parse(raw); } catch {}
+  if (!data?.id || (data.at && Date.now() - Number(data.at) > 10 * 60 * 1000)) {
+    try { sessionStorage.removeItem("wk_return"); } catch {}
+    revealShelf();
+    return;
+  }
+
+  const link = [...document.querySelectorAll("a.book__link")].find((item) => {
+    try {
+      return new URL(item.href).searchParams.get("id") === data.id;
+    } catch {
+      return false;
+    }
+  });
+  // 首页数据是异步渲染的：书卡还没出来就再等一会儿，不要提前把标记丢掉
+  if (!link) {
+    if (attempt < 30) {
+      window.setTimeout(() => restoreReturnTarget(attempt + 1), 100);
+    } else {
+      try { sessionStorage.removeItem("wk_return"); } catch {}
+      revealShelf();
     }
     return;
   }
 
-  let released = false;
-  const release = () => {
-    if (released) return;
-    released = true;
-    document.body.style.contain = "";
-  };
+  try { sessionStorage.removeItem("wk_return"); } catch {}
 
-  const attempt = () => {
-    const link = findOriginCard(origin);
-    if (link && playReturn(origin, link)) {
-      returnObserver?.disconnect();
-      clearTimeout(returnTimer);
-      returnObserver = null;
-      release();
-      return true;
+  const card = link.closest(".book");
+  const savedY = Number(data.scrollY);
+  if (Number.isFinite(savedY) && savedY > 40) {
+    window.scrollTo({ top: savedY, behavior: "instant" });
+  }
+
+  // 筛选状态恢复失败/布局高度变化时，旧 scrollY 会落到无关位置。
+  // 只要目标卡不在视口内，就把它滚到页头下方，避免“返回后找不到刚才那本”。
+  if (card) {
+    const rect = card.getBoundingClientRect();
+    if (rect.top < 12 || rect.top > innerHeight - 96) {
+      const header = document.querySelector(".site-header")?.offsetHeight ?? 0;
+      window.scrollTo({
+        top: Math.max(0, window.scrollY + rect.top - header - 18),
+        behavior: "instant",
+      });
     }
-    return false;
-  };
-  if (attempt()) return;
+  }
 
-  // 返回动画等待目标卡片渲染期间，先冻结文档重绘避免动画掉帧；找到卡片或超时后恢复。
-  document.body.style.contain = "layout paint";
-  returnObserver = new MutationObserver(() => attempt());
-  // 只观察主内容区：书卡渲染时会插入上千个节点，盯整个 body 会引发回调风暴。
-  returnObserver.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
-  returnTimer = window.setTimeout(() => { release(); finishReturn(returnObserver, null); }, 3200);
+  try {
+    if ("scrollRestoration" in history) history.scrollRestoration = "auto";
+  } catch {}
+  if (card) playShelfReturn(link, data.coverRect);
+  // 等滚动位置与书影动画先落一帧，再开始淡出遮罩，避免第一帧还在排版
+  requestAnimationFrame(() => requestAnimationFrame(revealShelf));
+}
+
+/** 在书页返回前，把大书影的当前位置留给首页，用来做“直接缩回书架”的起点。 */
+function saveBookCoverForReturn() {
+  try {
+    const cover = document.querySelector(".detail__cover .cover");
+    if (!cover) return;
+    const rect = cover.getBoundingClientRect();
+    let data = {};
+    try {
+      data = JSON.parse(sessionStorage.getItem("wk_return") || "{}") ?? {};
+    } catch {}
+    data.id = data.id || new URLSearchParams(location.search).get("id");
+    data.scrollY = Number.isFinite(Number(data.scrollY)) ? Number(data.scrollY) : 0;
+    data.coverRect = {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+    };
+    data.at = Date.now();
+    sessionStorage.setItem("wk_return", JSON.stringify(data));
+  } catch {
+    /* 无存储时退回普通返回 */
+  }
+}
+
+/**
+ * 返回转场：内容淡出、纸色遮罩合上。
+ * 不对整页做缩放，避免 300 张书卡一起重绘造成掉帧。
+ */
+function playClose(fallback) {
+  // 作品详情页返回：不要播放“合上书”的几帧，直接回书架，
+  // 由首页把详情页的大书影缩回卡片。
+  if (document.getElementById("book") && document.querySelector(".detail__cover .cover")) {
+    saveBookCoverForReturn();
+    navigateBack(fallback);
+    return;
+  }
+
+  if (reducedMotion.matches || typeof document.body.animate !== "function") {
+    navigateBack(fallback);
+    return;
+  }
+
+  document.documentElement.classList.add("is-closing");
+
+  let finished = false;
+  const done = () => {
+    if (finished) return;
+    finished = true;
+    navigateBack(fallback);
+  };
+
+  const target = document.querySelector(".detail") || document.querySelector("main") || document.body;
+  try {
+    // 用平滑的 45 个关键帧代替原来的 2 帧，让纸面合上的过程更细
+    const frames = [];
+    for (let index = 0; index <= CLOSE_FRAMES; index += 1) {
+      const t = index / CLOSE_FRAMES;
+      const eased = t * t * (3 - 2 * t);
+      frames.push({
+        offset: t,
+        opacity: 1 - 0.65 * eased,
+        transform: `translateY(${(-10 * eased).toFixed(3)}px)`,
+      });
+    }
+    const animation = target.animate(frames, {
+      duration: CLOSE_MS,
+      easing: "linear",
+      fill: "forwards",
+    });
+    animation.finished.then(done).catch(done);
+  } catch {
+    done();
+    return;
+  }
+
+  // 兜底：动画被中断时也能返回
+  window.setTimeout(done, CLOSE_MS + 180);
 }
 
 document.querySelectorAll("[data-back]").forEach((el) => {
   el.addEventListener("click", (event) => {
-    if (returning) { event.preventDefault(); return; }
-    const fallback = el.href;
-    const isBookDetail = location.pathname.endsWith("/book.html") || location.pathname === "/book.html";
-    if (isBookDetail) {
-      event.preventDefault();
-      if (animateBookReturn(fallback)) {
-        returning = true;
-        return;
-      }
-      navigateBack(fallback);
-      return;
-    }
-    if (reducedMotion.matches || typeof document.body.animate !== "function") return;
     event.preventDefault();
-    returning = true;
-    document.body.animate(
-      [{ opacity: 1 }, { opacity: 0.45 }],
-      { duration: 220, easing: "ease-out", fill: "forwards" }
-    ).finished.then(() => navigateBack(fallback)).catch(() => navigateBack(fallback));
+    if (closing) return;
+    closing = true;
+    playClose(el.href);
   });
 });
 
+// 浏览器自带返回键不会经过上面的 click：离开书页时也记下大书影位置，
+// 这样 bfcache / 浏览器返回也能从正确位置缩回卡片。
+window.addEventListener("pagehide", () => {
+  if (document.getElementById("book")) saveBookCoverForReturn();
+});
+
 window.addEventListener("pageshow", () => {
-  document.querySelectorAll(".page-return").forEach((el) => el.remove());
+  closing = false;
+  document.documentElement.classList.remove("is-closing");
+  document.querySelectorAll(".page-turn").forEach((el) => el.remove());
   document.body.classList.remove("is-returning", "is-page-turn");
-  returning = false;
-  resumeBookReturn();
+  window.setTimeout(restoreReturnTarget, 60);
 });
 
 // Mark the current section in the primary navigation.
 const sectionForPath = (pathname) => {
-  if (pathname === "/" || pathname.endsWith("/index.html") || pathname.endsWith("/book.html")) return "books";
+  if (isHomePath(pathname) || pathname.endsWith("/book.html")) return "books";
   if (pathname.endsWith("/categories.html")) return "categories";
+  if (pathname.endsWith("/reading-lists.html") || pathname.endsWith("/reading-list.html")) return "reading-lists";
   if (pathname.endsWith("/roam.html")) return "roam";
   if (pathname.endsWith("/authors.html") || pathname.endsWith("/author.html")) return "authors";
+  if (pathname.endsWith("/library.html")) return "library";
   return null;
 };
-const currentSection = sectionForPath(window.location.pathname);
-for (const link of document.querySelectorAll(".site-nav a")) {
-  const target = new URL(link.href, window.location.href);
-  const targetSection = target.hash === "#about" ? "about" : sectionForPath(target.pathname);
-  if (targetSection && targetSection === currentSection) link.setAttribute("aria-current", "page");
+
+const isHome = () => sectionForPath(window.location.pathname) === "books";
+
+/** 页头 + 工具栏的实际高度：跳转到锚点时用，避免标题被遮住。 */
+function anchorOffset() {
+  return (
+    (document.querySelector(".site-header")?.offsetHeight ?? 0) +
+    (document.querySelector(".toolbar")?.offsetHeight ?? 0) +
+    18
+  );
+}
+
+function updateNav() {
+  const showAbout = isHome() && window.location.hash === "#about";
+  for (const link of document.querySelectorAll(".site-nav a")) {
+    const target = new URL(link.href, window.location.href);
+    const isAboutLink = target.hash === "#about";
+    const active = showAbout ? isAboutLink : !isAboutLink && sectionForPath(target.pathname) === sectionForPath(window.location.pathname);
+    if (active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  }
+}
+
+updateNav();
+window.addEventListener("hashchange", updateNav);
+
+// 在首页点「关于」时直接滚动过去，不再重新加载页面，也不会先停在书架。
+for (const link of document.querySelectorAll('.site-nav a[href*="#"]')) {
+  link.addEventListener("click", (event) => {
+    if (!isHome() || !link.hash) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = document.querySelector(link.hash);
+    if (!target) return;
+    event.preventDefault();
+    const top = target.getBoundingClientRect().top + window.scrollY - anchorOffset();
+    window.scrollTo({ top, behavior: reducedMotion.matches ? "auto" : "smooth" });
+    history.replaceState(null, "", link.hash);
+    updateNav();
+  });
 }
 
 document.addEventListener("keydown", (event) => {
@@ -200,3 +336,76 @@ document.addEventListener("keydown", (event) => {
   input.focus();
   input.select?.();
 });
+
+/** 小屏页头搜索：桌面继续用原搜索框；≤900px 用一个按钮展开搜索条。 */
+function setupMobileSearch() {
+  const right = document.querySelector(".site-header__right");
+  const nav = right?.querySelector(".site-nav");
+  const header = document.querySelector(".site-header");
+  if (!right || !nav || !header || right.querySelector(".mobile-search-btn")) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "mobile-search-btn";
+  button.setAttribute("aria-label", "搜索书目");
+  button.setAttribute("aria-controls", "mobile-search-panel");
+  button.setAttribute("aria-expanded", "false");
+  button.textContent = "搜";
+
+  const panel = document.createElement("div");
+  panel.className = "mobile-search-panel";
+  panel.id = "mobile-search-panel";
+  panel.hidden = true;
+  panel.innerHTML = `
+    <form role="search" action="index.html" method="get">
+      <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      <button type="submit">搜索</button>
+    </form>
+  `;
+
+  right.insertBefore(button, nav);
+  header.appendChild(panel);
+  const input = panel.querySelector("input");
+
+  const close = () => {
+    panel.hidden = true;
+    button.setAttribute("aria-expanded", "false");
+  };
+
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (!panel.hidden) {
+      close();
+      button.focus();
+      return;
+    }
+    panel.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    input?.focus();
+  });
+  panel.addEventListener("click", (event) => event.stopPropagation());
+  document.addEventListener("click", close);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !panel.hidden) {
+      close();
+      button.focus();
+    }
+  });
+  window.addEventListener("resize", () => {
+    if (innerWidth > 900) close();
+  });
+}
+
+setupMobileSearch();
+
+/** 页脚补一个「关于本站」入口，保证小屏横向导航滚不到「关于」时也能找到。 */
+function setupFooterAbout() {
+  const footer = document.querySelector(".site-footer__in");
+  if (!footer || footer.querySelector('a[href$="#about"]')) return;
+  const link = document.createElement("a");
+  link.href = "index.html#about";
+  link.textContent = "关于本站";
+  footer.appendChild(link);
+}
+
+setupFooterAbout();

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>文化苦旅 · 中国现当代文学书影</title>
-<meta name="description" content="从《呼兰河传》到《本巴》，五十余部值得一读再读的中国现当代文学作品。文化苦旅 · WENHUAKULV。">
+<meta name="description" content="从《呼兰河传》到《本巴》，三百部值得一读再读的中国现当代文学作品，十条主题阅读路径。文化苦旅 · WENHUAKULV。">
 <meta name="theme-color" content="#F3EEE4">
 <meta property="og:title" content="文化苦旅 · 中国现当代文学书影">
-<meta property="og:description" content="山河是纸，岁月是墨。五十余部中国现当代文学作品，一册一册地看过去。">
+<meta property="og:description" content="山河是纸，岁月是墨。三百部中国现当代文学作品，十条编辑阅读路径，一册一册地看过去。">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
 <script>
@@ -20,10 +20,19 @@
       if (force === "0" || searching || (force !== "1" && shown)) {
         document.documentElement.classList.add("splash-skip");
       }
+      if (sessionStorage.getItem("wk_return")) {
+        document.documentElement.classList.add("is-returning");
+        try {
+          if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        } catch (e) {}
+        window.setTimeout(function () {
+          document.documentElement.classList.remove("is-returning", "is-return-ready");
+        }, 5000);
+      }
     } catch (e) {}
   })();
 </script>
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/site.css?v=20261026a">
 </head>
 <body>
 
@@ -56,8 +65,10 @@
       <nav class="site-nav" aria-label="主导航">
         <a href="#shelf">书架</a>
         <a href="categories.html">分类</a>
+        <a href="reading-lists.html">书单</a>
         <a href="roam.html">漫游</a>
         <a href="authors.html">作者</a>
+        <a href="library.html">书库</a>
         <a href="#about">关于</a>
       </nav>
     </div>
@@ -92,6 +103,34 @@
         <input id="search" type="search" placeholder="筛选：书名 / 作者 / 体裁" aria-label="在书墙内筛选" autocomplete="off">
       </label>
       <span class="toolbar__count" id="count" aria-live="polite">共 0 部</span>
+      <div class="filters" id="filters" aria-label="筛选与排序">
+        <div class="filter">
+          <span>体裁</span>
+          <button class="filter__trigger" type="button" data-filter-trigger="genre" aria-haspopup="listbox" aria-expanded="false">全部</button>
+          <div class="filter__menu" data-filter-menu="genre" role="listbox" aria-label="体裁" hidden></div>
+        </div>
+        <div class="filter">
+          <span>地区</span>
+          <button class="filter__trigger" type="button" data-filter-trigger="region" aria-haspopup="listbox" aria-expanded="false">全部</button>
+          <div class="filter__menu" data-filter-menu="region" role="listbox" aria-label="地区" hidden></div>
+        </div>
+        <div class="filter">
+          <span>奖项</span>
+          <button class="filter__trigger" type="button" data-filter-trigger="award" aria-haspopup="listbox" aria-expanded="false">全部</button>
+          <div class="filter__menu" data-filter-menu="award" role="listbox" aria-label="奖项" hidden></div>
+        </div>
+        <div class="filter">
+          <span>书库</span>
+          <button class="filter__trigger" type="button" data-filter-trigger="library" aria-haspopup="listbox" aria-expanded="false">全部</button>
+          <div class="filter__menu" data-filter-menu="library" role="listbox" aria-label="书库状态" hidden></div>
+        </div>
+        <div class="filter">
+          <span>排序</span>
+          <button class="filter__trigger filter__trigger--sort" type="button" data-filter-trigger="sort" aria-haspopup="listbox" aria-expanded="false">年代：早到晚</button>
+          <div class="filter__menu" data-filter-menu="sort" role="listbox" aria-label="排序方式" hidden></div>
+        </div>
+        <button class="filters__reset" type="button" id="filter-reset">重置</button>
+      </div>
     </div>
   </div>
 
@@ -118,10 +157,11 @@
         年份以初版为准，奖项只标有依据者。
       </p>
       <p>
+        如果不想从书墙里随机挑，可以走<a href="reading-lists.html">十条主题书单</a>：东北叙事、女性写作、
+        先锋小说、乡土的百年、从 1949 到 2022……每条路线都说明为什么放在一起、先读哪本、读完接哪本。
+      </p>
+      <p>
         页面中的<em>书影为版式再创作</em>：依据书名、作者与年代重新设计，不是原书封面的扫描件。
-        若想换成真实书照，把图片放进 <code>public/covers/</code>，并在
-        <code>public/data/books.json</code> 对应条目加上 <code>"photo": "covers/文件名.jpg"</code> 即可，
-        图片加载失败时会自动退回当前的设计书影。
       </p>
     </div>
   </section>
@@ -139,9 +179,10 @@
   </div>
 </footer>
 
-<script type="module" src="js/ui.js"></script>
-<script type="module" src="js/splash.js"></script>
-<script type="module" src="js/book-effects.js"></script>
-<script type="module" src="js/index.js"></script>
+<script type="module" src="js/ui.js?v=20261026a"></script>
+<script type="module" src="js/splash.js?v=20261026a"></script>
+<script type="module" src="js/book-effects.js?v=20261026a"></script>
+<script type="module" src="js/index.js?v=20261026a"></script>
+  <script type="module" src="js/ai.js?v=20261026a"></script>
 </body>
 </html>

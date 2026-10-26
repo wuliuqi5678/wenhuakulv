@@ -1,0 +1,10 @@
+import fs from "node:fs";
+const path = "public/data/books.json";
+const data = JSON.parse(fs.readFileSync(path, "utf8"));
+const book = data.books.find((item) => item.id === "wanfanhoudegushi");
+const p = "汪曾祺把“无事”写得有味：一碗粥、一句闲话，都是日子的骨架。";
+if (!book.intro.includes(p)) book.intro.push(p);
+fs.writeFileSync(path, JSON.stringify(data, null, 2) + "\n", "utf8");
+const lens = data.books.map((item) => item.intro.join("").length);
+console.log("总书目", data.books.length, "| 4段以上", data.books.filter((item) => item.intro.length >= 4).length, "| 低于150", lens.filter((x) => x < 150).length, "| 低于200", lens.filter((x) => x < 200).length);
+console.log("最短", Math.min(...lens), "最长", Math.max(...lens), "平均", Math.round(lens.reduce((a, b) => a + b, 0) / lens.length));

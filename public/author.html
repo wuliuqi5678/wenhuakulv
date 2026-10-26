@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>作者详情 · 文化苦旅</title>
-<meta name="description" content="文化苦旅 · 作者介绍：生平简介、本站收录作品与同时代人。">
+<meta name="description" content="文化苦旅 · 作者介绍：生平经历、主要作品、获奖与荣誉。">
 <meta property="og:title" content="作者详情 · 文化苦旅">
-<meta property="og:description" content="文化苦旅 · 作者介绍：生平简介、本站收录作品与同时代人。">
+<meta property="og:description" content="文化苦旅 · 作者介绍：生平经历、主要作品、获奖与荣誉。">
 <meta property="og:type" content="profile">
 <meta name="theme-color" content="#F3EEE4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/site.css?v=20261026a">
 </head>
 <body>
 
@@ -37,8 +37,10 @@
       <nav class="site-nav" aria-label="主导航">
         <a href="index.html">书架</a>
         <a href="categories.html">分类</a>
+        <a href="reading-lists.html">书单</a>
         <a href="roam.html">漫游</a>
         <a href="authors.html">作者</a>
+        <a href="library.html">书库</a>
         <a href="index.html#about">关于</a>
       </nav>
     </div>
@@ -57,8 +59,27 @@
       <p class="author__years" id="author-years"></p>
       <p class="author__role" id="author-role"></p>
       <div class="tags" id="author-tags"></div>
-      <div class="author-bio" id="author-bio"></div>
     </div>
+
+    <section class="author-section author-section--bio" aria-label="生平经历">
+      <h2>生平经历</h2>
+      <div class="author-bio" id="author-bio"></div>
+    </section>
+
+    <section class="author-section" aria-label="创作风格与读法">
+      <h2>创作风格与读法</h2>
+      <div class="author-bio author-critique" id="author-critique"></div>
+    </section>
+
+    <section class="author-section" id="author-bibliography-wrap" aria-label="主要作品">
+      <h2>主要作品</h2>
+      <ul class="author-list" id="author-bibliography"></ul>
+    </section>
+
+    <section class="author-section" id="author-awards-wrap" aria-label="获奖与荣誉">
+      <h2>获奖与荣誉</h2>
+      <ul class="author-list author-list--awards" id="author-awards"></ul>
+    </section>
 
     <section class="author-works" id="author-works-wrap" aria-label="本站收录作品">
       <h2>本站收录</h2>
@@ -79,7 +100,8 @@
       <span>书目整理 · 本地运行 · 无第三方依赖</span>
     </div>
     <p class="site-footer__note">
-      作者简介据公开资料整理，仅作阅读索引之用；如与更权威的版本有出入，以原著与年谱为准。
+      作者简介、作品与奖项据公开资料整理，仅作阅读索引之用；作品年份以初版或首次发表为准，
+      如与更权威的版本有出入，以原著与年谱为准。
     </p>
   </div>
 </footer>
@@ -90,8 +112,9 @@
   </p>
 </noscript>
 
-<script type="module" src="js/ui.js"></script>
-<script type="module" src="js/book-effects.js"></script>
-<script type="module" src="js/author.js"></script>
+<script type="module" src="js/ui.js?v=20261026a"></script>
+<script type="module" src="js/book-effects.js?v=20261026a"></script>
+<script type="module" src="js/author.js?v=20261026a"></script>
+  <script type="module" src="js/ai.js?v=20261026a"></script>
 </body>
 </html>

@@ -89,6 +89,14 @@ function renderStage() {
       <h2 class="roam-stage__title">${esc(book.title)}</h2>
       <p class="roam-stage__sub">${esc(book.author)} · ${book.year} 年 · ${esc(book.genre)}</p>
       <p class="roam-stage__why">${esc(book.why ?? "")}</p>
+      ${
+        book.quotes?.length
+          ? `<blockquote class="roam-stage__quote">
+               <p>“${esc(book.quotes[0].text)}”</p>
+               <cite>${esc(book.quotes[0].from ?? `《${book.title}》`)}</cite>
+             </blockquote>`
+          : ""
+      }
       <div class="roam-stage__tags">${(book.tags ?? [])
         .map((tag) => `<span class="tag">${esc(tag)}</span>`)
         .join("")}</div>
@@ -108,12 +116,13 @@ function renderStage() {
   });
 }
 
-function draw() {
+function draw({ advance = true } = {}) {
   const book = pickWeighted();
   if (!book) return;
   state.shown.add(book.id);
   state.current = book;
-  state.count += 1;
+  // 勾选/清空偏好只是换一本，不推进“第 N 本”的计数
+  if (advance) state.count += 1;
   renderStage();
 }
 
@@ -125,7 +134,7 @@ function bind() {
     if (state.selected.has(tag)) state.selected.delete(tag);
     else state.selected.add(tag);
     chip.setAttribute("aria-pressed", String(state.selected.has(tag)));
-    draw();
+    draw({ advance: false });
   });
 
   el.next.addEventListener("click", () => {
@@ -138,7 +147,7 @@ function bind() {
     for (const chip of el.interests.querySelectorAll(".chip")) {
       chip.setAttribute("aria-pressed", "false");
     }
-    draw();
+    draw({ advance: false });
   });
 }
 

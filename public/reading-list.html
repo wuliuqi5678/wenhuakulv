@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主题书单 · 文化苦旅</title>
+<meta name="description" content="文化苦旅主题书单：为什么这几本书要一起读，先读哪本，读完接哪本。">
+<meta property="og:title" content="主题书单 · 文化苦旅">
+<meta property="og:description" content="一条有导语、有顺序、有衔接的编辑阅读路线。">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=20261026a">
+</head>
+<body>
+
+<a class="skip-link" href="#list-path">跳到阅读路径</a>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="back-btn" href="reading-lists.html" data-back aria-label="返回上一页">
+        <span class="back-btn__arrow" aria-hidden="true">←</span><span class="back-btn__label">返回</span>
+      </a>
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="reading-lists.html">书单</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="library.html">书库</a>
+        <a href="index.html#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div id="list-page" class="list-detail">
+    <p class="crumb">
+      <a href="reading-lists.html">主题书单</a>
+      <span aria-hidden="true">/</span>
+      <span id="list-crumb">正在翻页</span>
+    </p>
+
+    <header class="list-hero">
+      <div class="list-hero__main">
+        <div class="list-hero__topline">
+          <span class="list-hero__number" id="list-number">NO. 00</span>
+          <span class="list-hero__theme" id="list-theme"></span>
+        </div>
+        <h1 class="list-hero__title" id="list-title">正在整理这条路线…</h1>
+        <p class="list-hero__sub" id="list-subtitle"></p>
+        <p class="list-hero__stats" id="list-stats"></p>
+        <p class="list-hero__start" id="list-start"></p>
+        <div class="list-hero__progress" id="list-progress" aria-live="polite"></div>
+      </div>
+      <div class="list-hero__visual">
+        <div class="cover-stack cover-stack--hero" id="list-stack" aria-hidden="true"></div>
+        <p class="list-hero__visual-note" aria-hidden="true">
+          <span>起点</span><span>半程</span><span>终点</span>
+        </p>
+      </div>
+    </header>
+
+    <section class="list-prose-wrap" aria-labelledby="list-prose-title">
+      <p class="list-section-kicker" id="list-prose-title">路线导语 · 为什么是这几本</p>
+      <div class="list-prose" id="list-intro"></div>
+    </section>
+
+    <section class="list-path" id="list-path" aria-labelledby="list-path-title">
+      <div class="list-path__head">
+        <div>
+          <p class="list-section-kicker">READING ORDER</p>
+          <h2 id="list-path-title">阅读路径</h2>
+        </div>
+        <p id="list-path-count"></p>
+      </div>
+      <p class="list-path__hint">按编号顺序读；也可以从任意一本跳进去，再回到路线。</p>
+      <ol class="list-path__list" id="path-list"></ol>
+    </section>
+
+    <nav class="list-next" id="list-next" aria-label="下一份书单"></nav>
+
+    <p class="list-back">
+      <a class="btn btn--ghost" href="reading-lists.html">← 回到全部主题书单</a>
+    </p>
+  </div>
+
+  <div class="notfound" id="list-notfound" hidden>
+    <p class="notfound__mark" aria-hidden="true">单</p>
+    <h1>没有找到这份书单</h1>
+    <p id="list-notfound-message">它可能已经改名，或者链接拼错了。</p>
+    <p class="notfound__actions">
+      <a class="btn" href="reading-lists.html">看全部书单</a>
+      <a class="btn btn--ghost" href="index.html">回书架</a>
+    </p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 编辑书单 · 本地运行</span>
+    </div>
+    <p class="site-footer__note">
+      书单为编辑阅读建议，不是权威榜单；书目信息仅作介绍之用，书影为版式再创作。
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+    本页需要 JavaScript 才能读取主题书单。请在浏览器中启用脚本后刷新。
+  </p>
+</noscript>
+
+<script type="module" src="js/ui.js?v=20261026a"></script>
+<script type="module" src="js/book-effects.js?v=20261026a"></script>
+<script type="module" src="js/reading-list.js?v=20261026a"></script>
+<script type="module" src="js/ai.js?v=20261026a"></script>
+</body>
+</html>

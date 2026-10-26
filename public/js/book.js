@@ -10,6 +10,9 @@ import {
   decadeOf,
   esc,
 } from "./covers.js";
+import { getEntry, setStatus, setReadingStart, setReadDates, finishReading, markReread, removeBook, today, formatDate } from "./library-store.js";
+import { dateField, initDatePicker } from "./date-picker.js";
+import { loadReadingLists, listNumber } from "./reading-lists-data.js";
 
 const ids = {
   article: document.getElementById("book"),
@@ -20,8 +23,12 @@ const ids = {
   tags: document.getElementById("book-tags"),
   meta: document.getElementById("book-meta"),
   intro: document.getElementById("book-intro"),
+  quotes: document.getElementById("book-quotes"),
+  quotesList: document.getElementById("book-quotes-list"),
   why: document.getElementById("book-why"),
   note: document.getElementById("book-note"),
+  bookLists: document.getElementById("book-lists"),
+  bookListsList: document.getElementById("book-lists-list"),
   related: document.getElementById("related-list"),
   relatedWrap: document.getElementById("related"),
   pager: document.getElementById("pager"),
@@ -46,10 +53,9 @@ function metaRows(book, authorId) {
   const rows = [
     ["作者", authorCell, true],
     ["初版", `${book.year} 年`],
-    ["出版", book.publisher],
-    ["体裁", book.genre],
-    ["年代", decadeOf(book.year).replace("s", " 年代")],
   ];
+  if (book.publisher) rows.push(["出版", book.publisher]);
+  rows.push(["体裁", book.genre], ["年代", decadeOf(book.year).replace("s", " 年代")]);
   if (book.awards?.length) rows.push(["奖项", book.awards.join("；")]);
 
   return rows
@@ -85,6 +91,31 @@ function renderAuthorCard(author) {
       <span class="book-author__more">查看作者介绍 →</span>
     </a>
   `;
+}
+
+function renderBookLists(book, listData) {
+  if (!ids.bookLists || !ids.bookListsList) return;
+
+  const hits = [];
+  (listData?.lists ?? []).forEach((list, index) => {
+    const position = (list.books ?? []).findIndex((ref) => ref.id === book.id);
+    if (position < 0) return;
+    hits.push({ list, index, position, total: list.books.length });
+  });
+
+  if (!hits.length) return;
+
+  ids.bookListsList.innerHTML = hits
+    .map(
+      ({ list, index, position, total }) => `
+      <a class="book-list-link" href="reading-list.html?id=${encodeURIComponent(list.id)}">
+        <span class="book-list-link__no">${listNumber(index)}</span>
+        <span class="book-list-link__title">${esc(list.title)}</span>
+        <span class="book-list-link__pos">第 ${position + 1} 本 / 共 ${total} 本 →</span>
+      </a>`
+    )
+    .join("");
+  ids.bookLists.hidden = false;
 }
 
 function pickRelated(book, books) {
@@ -133,6 +164,107 @@ function renderPager(book, books) {
   `;
 }
 
+function renderLibrary(book) {
+  const section = document.getElementById("book-library");
+  if (!section) return;
+
+  const paint = () => {
+    const entry = getEntry(book.id);
+    const isReading = entry?.status === "reading";
+    const isRead = entry?.status === "read";
+    const isWish = entry?.status === "wish";
+    const when = isReading
+      ? entry.start
+        ? `始于 ${formatDate(entry.start)}`
+        : "未填开始日期"
+      : isRead
+        ? entry.start && entry.end
+          ? entry.start === entry.end
+            ? `读完 ${formatDate(entry.end)}`
+            : `${formatDate(entry.start)} — ${formatDate(entry.end)}`
+          : entry.end
+            ? `读完 ${formatDate(entry.end)}`
+            : entry.start
+              ? `始于 ${formatDate(entry.start)}`
+              : "未填日期"
+        : "";
+    section.innerHTML = `
+      <div class="book-library__head">
+        <h2>我的书库</h2>
+        <p aria-live="polite">${
+          isReading
+            ? `在读 · ${when}`
+            : isRead
+              ? `已看过 · ${when} · 读过 ${Math.max(1, Number(entry.reads) || 1)} 遍`
+              : isWish
+                ? "已加入想读"
+                : "还没有收藏这本书"
+        }</p>
+      </div>
+      <div class="book-library__actions">
+        <button class="btn${isReading ? "" : " btn--ghost"}" type="button" data-lib="reading">${isReading ? "✓ 在读" : "在读"}</button>
+        <button class="btn${isRead ? "" : " btn--ghost"}" type="button" data-lib="read">${isRead ? "✓ 已看过" : isReading ? "标记读完" : "看过"}</button>
+        <button class="btn${isWish ? "" : " btn--ghost"}" type="button" data-lib="wish">${isWish ? "✓ 已想读" : "想读"}</button>
+        ${isRead ? `<button class="library-mini" type="button" data-lib="reread">重读 +1</button>` : ""}
+        ${entry ? `<button class="library-mini library-mini--quiet" type="button" data-lib="remove">移出书库</button>` : ""}
+      </div>
+      ${
+        isReading || isRead
+          ? `<div class="book-library__dates">
+               <span class="book-library__date-label">开始</span>${dateField(entry.start, "data-lib-start")}
+               ${
+                 isRead
+                   ? `<span aria-hidden="true">—</span>
+                      <span class="book-library__date-label">读完</span>${dateField(entry.end, "data-lib-end")}`
+                   : ""
+               }
+             </div>`
+          : ""
+      }
+      <p class="book-library__hint"><a href="library.html">去书库看完整记录与时间轴 →</a></p>
+    `;
+
+    section.querySelector("[data-lib='reading']")?.addEventListener("click", () => {
+      setStatus(book.id, "reading", entry?.start || today());
+      paint();
+    });
+    section.querySelector("[data-lib='read']")?.addEventListener("click", () => {
+      if (isReading) finishReading(book.id, today());
+      else setStatus(book.id, "read", entry?.end || today());
+      paint();
+    });
+    section.querySelector("[data-lib='wish']")?.addEventListener("click", () => {
+      setStatus(book.id, "wish");
+      paint();
+    });
+    section.querySelector("[data-lib='remove']")?.addEventListener("click", () => {
+      if (!window.confirm(`确定从书库移除《${book.title}》？笔记、摘句和日期也会一起删除。`)) return;
+      removeBook(book.id);
+      paint();
+    });
+    section.querySelector("[data-lib='reread']")?.addEventListener("click", () => {
+      markReread(book.id);
+      paint();
+    });
+  };
+
+  section.addEventListener("date-change", (event) => {
+    if (!event.target.matches("[data-lib-start], [data-lib-end]")) return;
+    const entry = getEntry(book.id);
+    if (entry?.status === "reading") {
+      setReadingStart(book.id, section.querySelector("[data-lib-start]")?.dataset.value ?? "");
+    } else if (entry?.status === "read") {
+      setReadDates(book.id, {
+        start: section.querySelector("[data-lib-start]")?.dataset.value ?? "",
+        end: section.querySelector("[data-lib-end]")?.dataset.value ?? "",
+      });
+    }
+    paint();
+  });
+
+  paint();
+}
+
 async function main() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -144,12 +276,17 @@ async function main() {
 
   let data;
   let authorData;
+  let listData = { lists: [] };
   try {
-    [data, authorData] = await Promise.all([
+    const [booksData, authorsData, listsData] = await Promise.all([
       loadBooks(),
-      // 作者数据缺失不应导致整页失败
+      // 作者数据与书单缺失不应导致整页失败
       loadAuthors().catch(() => ({ authors: [] })),
+      loadReadingLists().catch(() => ({ lists: [] })),
     ]);
+    data = booksData;
+    authorData = authorsData;
+    listData = listsData;
   } catch (error) {
     notFound(`书目数据加载失败：${error.message}。请确认通过本地服务器访问。`);
     return;
@@ -164,6 +301,8 @@ async function main() {
   }
 
   const author = (authorData.authors ?? []).find((a) => a.name === book.author);
+
+  initDatePicker();
 
   document.title = `《${book.title}》${book.author} · 文化苦旅`;
 
@@ -188,9 +327,30 @@ async function main() {
 
   ids.meta.innerHTML = metaRows(book, author?.id);
 
+  renderLibrary(book);
+
   renderAuthorCard(author);
 
+  renderBookLists(book, listData);
+
   ids.intro.innerHTML = (book.intro ?? []).map((p) => `<p>${esc(p)}</p>`).join("");
+
+  const quotes = book.quotes ?? [];
+  if (quotes.length && ids.quotes && ids.quotesList) {
+    ids.quotesList.innerHTML = quotes
+      .map(
+        (quote) => `
+        <figure class="quote">
+          <blockquote><p>${esc(quote.text)}</p></blockquote>
+          <figcaption>${esc(quote.from ?? `《${book.title}》`)}</figcaption>
+        </figure>`
+      )
+      .join("");
+    ids.quotes.hidden = false;
+  } else if (ids.quotes && ids.quotesList) {
+    ids.quotesList.innerHTML = `<p class="quote quote--empty">暂无可靠原文摘句，宁缺毋滥。</p>`;
+    ids.quotes.hidden = false;
+  }
 
   if (book.why) {
     ids.why.textContent = book.why;

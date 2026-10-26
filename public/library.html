@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书库 · 文化苦旅</title>
+<meta name="description" content="我的书库：记录在读、读过的书和想读的书，并按日期展开一条阅读时间轴。">
+<meta property="og:title" content="书库 · 文化苦旅">
+<meta property="og:description" content="记录在读、读过与想读的书，并按日期展开一条阅读时间轴。">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F3EEE4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%239E2B25'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='%23F7EFE2' font-family='serif'%3E%E6%96%87%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=20261026a">
+</head>
+<body>
+
+<a class="skip-link" href="#library">跳到书库</a>
+
+<header class="site-header">
+  <div class="shell site-header__in">
+    <div class="site-header__left">
+      <a class="back-btn" href="index.html" data-back aria-label="返回上一页">
+        <span class="back-btn__arrow" aria-hidden="true">←</span><span class="back-btn__label">返回</span>
+      </a>
+      <a class="brand" href="index.html" aria-label="文化苦旅 · 返回首页">
+        <span class="brand__seal" aria-hidden="true">文</span>
+        <span class="brand__text">
+          <span class="brand__cn">文化苦旅</span>
+          <span class="brand__py">WENHUAKULV</span>
+        </span>
+      </a>
+    </div>
+    <div class="site-header__right">
+      <form class="head-search" role="search" action="index.html" method="get">
+        <input type="search" name="q" placeholder="搜索书名 / 作者" aria-label="搜索书目" autocomplete="off">
+      </form>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="index.html">书架</a>
+        <a href="categories.html">分类</a>
+        <a href="reading-lists.html">书单</a>
+        <a href="roam.html">漫游</a>
+        <a href="authors.html">作者</a>
+        <a href="library.html">书库</a>
+        <a href="index.html#about">关于</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="shell" id="library">
+  <div class="library-hero">
+    <div class="library-hero__main">
+      <p class="crumb">
+        <a href="index.html">书架</a>
+        <span aria-hidden="true">/</span>
+        <span>书库</span>
+      </p>
+      <h1>书库</h1>
+      <p class="library-lede">
+        把正在读的书记进「在读」，读完的收进「我看过」，惦记的书放进「想读」。
+        每一本都可以记下开始与读完的日子；想看的时候，一键展开成一条只属于你的阅读时间轴。
+      </p>
+      <div class="library-hero__actions">
+        <button class="btn" type="button" id="library-add-toggle" aria-expanded="false" aria-controls="library-add">＋ 添加一本书</button>
+        <button class="btn btn--ghost" type="button" id="library-timeline-jump">展开时间轴</button>
+      </div>
+    </div>
+    <aside class="library-hero__aside" aria-hidden="true">
+      <span class="library-hero__seal">读</span>
+      <p class="library-hero__latin">READING<br>LEDGER</p>
+      <p class="library-hero__note">把读过的日子，<br>一页一页留下来。</p>
+    </aside>
+  </div>
+
+  <div class="library-stats-panel">
+    <div class="library-stats" id="library-stats" aria-live="polite"></div>
+    <p class="library-stats__note">记录只保存在当前浏览器；换设备或清除浏览器数据后不会保留。</p>
+  </div>
+
+  <section class="library-add" id="library-add" aria-label="添加到书库" hidden>
+    <label class="library-add__label" for="library-add-input">搜索站内书目</label>
+    <input class="library-add__input" id="library-add-input" type="search" placeholder="书名、作者，例如：边城 / 沈从文" autocomplete="off">
+    <p class="library-add__hint">找到后点「想读」「在读」或「看过」，也可以直接进书页添加；日期稍后可以补填。</p>
+    <ul class="library-add__results" id="library-add-results"></ul>
+  </section>
+
+  <div class="library-shelf-head">
+    <p class="library-kicker">MY READING / 阅读档案</p>
+    <p>正在读的排在时间轴最前；读过的按读完日期排列。</p>
+  </div>
+
+  <div class="library-tabs" role="tablist" aria-label="书库视图">
+    <button class="library-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="library-panel-reading" data-view="reading">
+      在读 <span class="library-tab__count" id="library-count-reading">0</span>
+    </button>
+    <button class="library-tab" type="button" role="tab" aria-selected="false" aria-controls="library-panel-read" data-view="read">
+      我看过 <span class="library-tab__count" id="library-count-read">0</span>
+    </button>
+    <button class="library-tab" type="button" role="tab" aria-selected="false" aria-controls="library-panel-wish" data-view="wish">
+      想读 <span class="library-tab__count" id="library-count-wish">0</span>
+    </button>
+    <button class="library-tab" type="button" role="tab" aria-selected="false" aria-controls="library-panel-timeline" data-view="timeline">
+      时间轴
+    </button>
+  </div>
+
+  <section class="library-panel is-active" id="library-panel-reading" role="tabpanel" aria-label="在读">
+    <ol class="library-list" id="library-reading-list"></ol>
+    <p class="library-empty" id="library-reading-empty" hidden>还没有在读的书。点「添加一本书」选「在读」，或从书页开始读。</p>
+  </section>
+
+  <section class="library-panel" id="library-panel-read" role="tabpanel" aria-label="我看过" hidden>
+    <ol class="library-list" id="library-read-list"></ol>
+    <p class="library-empty" id="library-read-empty" hidden>还没有记录读过的书。点「添加一本书」，或从任意书页把它标记为看过。</p>
+  </section>
+
+  <section class="library-panel" id="library-panel-wish" role="tabpanel" aria-label="想读" hidden>
+    <ol class="library-list" id="library-wish-list"></ol>
+    <p class="library-empty" id="library-wish-empty" hidden>想读清单还是空的。遇到感兴趣的书，先放进来，慢慢读。</p>
+  </section>
+
+  <section class="library-panel" id="library-panel-timeline" role="tabpanel" aria-label="阅读时间轴" hidden>
+    <div class="library-timeline-head">
+      <div>
+        <h2>阅读时间轴</h2>
+        <p>正在读的排在最前；其余按读完日期从近到远排列，没填日期的放在最后。</p>
+      </div>
+      <button class="btn btn--ghost" type="button" id="library-timeline-full">全屏观看</button>
+    </div>
+    <div class="library-timeline" id="library-timeline"></div>
+    <p class="library-empty" id="library-timeline-empty" hidden>时间轴还没有内容。先记录一本在读或读过的书，填上日期。</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="site-footer__in">
+      <span>文化苦旅 · WENHUAKULV</span>
+      <span>书目整理 · 本地运行 · 无第三方依赖</span>
+    </div>
+    <p class="site-footer__note">
+      书库记录保存在当前浏览器本地，不会上传服务器；清除浏览器数据会一并清除。
+    </p>
+  </div>
+</footer>
+
+<noscript>
+  <p style="max-width:40ch;margin:40px auto;font-family:serif;text-align:center">
+    本页需要 JavaScript 才能读写书库。请在浏览器中启用脚本后刷新。
+  </p>
+</noscript>
+
+<script type="module" src="js/ui.js?v=20261026a"></script>
+<script type="module" src="js/library.js?v=20261026a"></script>
+<script type="module" src="js/ai.js?v=20261026a"></script>
+</body>
+</html>

@@ -1,96 +1,45 @@
 /**
  * 书卡交互：
- * 1. 悬停时按网格间隙计算「不压到相邻书」的最大放大倍数；
- * 2. 点击时把书放大到屏幕中央，再像翻开封面一样转场进入详情页。
+ * 1. 悬停时按网格间隙算出「不压到相邻书」的最大放大倍数；
+ * 2. 点击时把书放大到屏幕中央，再像翻开封面一样进入详情页。
  *
- * 放大倍数由列间距实时算出：相邻两本书各占一半空隙，
- * 因此 scale ≤ 1 + 间隙 / 封面宽度（再留 20% 余量）。
- *
- * 转场三段合计约 2.6 秒（放大 860ms、翻页 780ms、铺满 1000ms），节奏从容舒展；
- * 不想看完时，再点一次或按 Esc / 空格 / Enter 会立即跳转，不让人干等。
+ * 性能约定：所有位移/缩放/旋转只用 transform 与 opacity，
+ * 每个阶段只给 2 个关键帧、靠缓动曲线过渡，交给合成器插值；
+ * 不再逐帧生成几十个关键帧，避免主线程为每一帧重新计算样式。
  */
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 // ?turndemo=1 只演示翻书动画、不跳转，便于演示与截图
 const TURN_DEMO = new URLSearchParams(window.location.search).has("turndemo");
-// 三段动画时长：放大、翻页、铺满（从容节奏，配合 skip 使用）
-const TURN_ZOOM_MS = 860;
-const TURN_FLIP_MS = 780;
-const TURN_FILL_MS = 1000;
+const TURN_ZOOM_MS = 500;
+const TURN_FLIP_MS = 440;
+const EASE_OUT = "cubic-bezier(0.22, 0.72, 0.18, 1)";
+const EASE_FLIP = "cubic-bezier(0.45, 0.05, 0.55, 0.95)";
+
+const BOOK_ARRIVAL_KEY = "wk_book_arrival";
 
 let hovered = null;
 let turning = false;
 let turnRun = 0;
-let pendingHref = ""; // 转场结束后要去的地址；跳过时立即前往
-const BOOK_ORIGIN_KEY = "wk_book_origin";
-let activeTurn = null;
-let resizeFrame = 0;
+let pendingHref = "";
 
 /** 立即结束当前转场：清遮罩、解锁点击，并按需直接跳转。 */
 function bailTurn(navigate = true) {
   turnRun += 1;
   turning = false;
-  activeTurn = null;
   document.querySelectorAll(".page-turn").forEach((el) => el.remove());
   document.body.classList.remove("is-page-turn");
-  if (navigate && pendingHref && !TURN_DEMO) {
-    window.location.href = pendingHref;
-  }
+  if (navigate && pendingHref && !TURN_DEMO) window.location.href = pendingHref;
   pendingHref = "";
 }
 
 function turnLayout(rect) {
-  const scale = Math.min(2.2, (window.innerHeight * 0.7) / rect.height, (window.innerWidth * 0.8) / rect.width);
-  const dx = window.innerWidth / 2 - (rect.left + (rect.width * scale) / 2);
-  const dy = window.innerHeight / 2 - (rect.top + rect.height / 2);
-  const fillScale = Math.max(window.innerWidth / (rect.width * scale), window.innerHeight / (rect.height * scale));
-  const finalScale = scale * fillScale;
-  const finalDx = window.innerWidth / 2 - (rect.left + (rect.width * finalScale) / 2);
+  const scale = Math.min(2.2, (innerHeight * 0.7) / rect.height, (innerWidth * 0.8) / rect.width);
+  const dx = innerWidth / 2 - (rect.left + (rect.width * scale) / 2);
+  const dy = innerHeight / 2 - (rect.top + rect.height / 2);
   return {
+    rest: `translate3d(${dx}px, ${dy}px, 0) scale(${scale})`,
     scale,
-    rest: `translate(${dx}px, ${dy}px) scale(${scale})`,
-    final: `translate(${finalDx}px, ${dy}px) scale(${finalScale})`,
-    finalScale,
   };
-}
-
-function retargetActiveTurn() {
-  if (!activeTurn) return;
-  const layout = turnLayout(activeTurn.rect);
-  for (const entry of activeTurn.entries) {
-    const { animation, element } = entry;
-    if (animation.playState !== "running" || !animation.effect?.setKeyframes) continue;
-    const elapsed = Number(animation.currentTime) || 0;
-    const remaining = Math.max(140, entry.duration - elapsed);
-    const from = { transform: getComputedStyle(element).transform, opacity: getComputedStyle(element).opacity };
-    try {
-      animation.effect.setKeyframes([from, entry.to(layout)]);
-      animation.effect.updateTiming({ duration: remaining });
-      animation.currentTime = 0;
-      entry.duration = remaining;
-    } catch {
-      // 浏览器不支持动态关键帧时保留当前阶段，让后续页面仍可正常打开。
-    }
-  }
-}
-
-window.addEventListener("resize", () => {
-  cancelAnimationFrame(resizeFrame);
-  resizeFrame = requestAnimationFrame(retargetActiveTurn);
-  if (hovered) applyHover(hovered);
-}, { passive: true });
-
-function rememberBookOrigin(link, cover) {
-  try {
-    const rect = cover.getBoundingClientRect();
-    sessionStorage.setItem(BOOK_ORIGIN_KEY, JSON.stringify({
-      id: new URL(link.href).searchParams.get("id"),
-      href: window.location.href,
-      rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
-      viewport: { width: window.innerWidth, height: window.innerHeight },
-    }));
-  } catch {
-    // 不支持会话存储时仍可使用普通返回动画。
-  }
 }
 
 function applyHover(link) {
@@ -138,7 +87,19 @@ async function startTurn(link) {
   turning = true;
   pendingHref = link.href;
   const run = ++turnRun;
-  rememberBookOrigin(link, cover);
+
+  try {
+    sessionStorage.setItem(
+      "wk_return",
+      JSON.stringify({
+        id: new URL(link.href).searchParams.get("id"),
+        scrollY: window.scrollY,
+        at: Date.now(),
+      })
+    );
+  } catch {
+    /* 隐私模式可能禁用 sessionStorage */
+  }
 
   const overlay = document.createElement("div");
   overlay.className = "page-turn";
@@ -152,9 +113,11 @@ async function startTurn(link) {
 
   const escape = (value) =>
     String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const title = cover.querySelector(".cover__title")?.textContent ?? "";
-  const author = cover.querySelector(".cover__author")?.textContent ?? "";
-  page.innerHTML = `<span class="page-turn__title">${escape(title)}</span><span class="page-turn__author">${escape(author)}</span>`;
+  page.innerHTML = `<span class="page-turn__title">${escape(
+    cover.querySelector(".cover__title")?.textContent ?? ""
+  )}</span><span class="page-turn__author">${escape(
+    cover.querySelector(".cover__author")?.textContent ?? ""
+  )}</span>`;
 
   const clone = cover.cloneNode(true);
   clone.classList.add("page-turn__book");
@@ -167,98 +130,69 @@ async function startTurn(link) {
   document.body.appendChild(overlay);
   document.body.classList.add("is-page-turn");
   overlay.classList.add("is-active");
+  // 先把这一层布局/栅格化落定，动画第一帧就不会卡在首次绘制上
+  void overlay.offsetWidth;
 
   const layout = turnLayout(rect);
-  // 页面与封面都以左侧书脊为缩放轴，按放大后的宽度计算位移，
-  // 才能让整本书最终停在视口中央，而不是偏向右侧。
-  const rest = layout.rest;
-  const easing = "cubic-bezier(0.2, 0.7, 0.2, 1)";
+  const timing = (duration, easing) => ({ duration, easing, fill: "forwards" });
 
   try {
-    // 封面与内页使用同一时长、曲线、起点和书脊缩放轴，放大时严丝合缝。
-    const zoomIn = { duration: TURN_ZOOM_MS, easing, fill: "forwards" };
-    const zoomCover = clone.animate([{ transform: "none" }, { transform: rest }], zoomIn);
-    const zoomPage = page.animate([{ opacity: 0, transform: "none" }, { opacity: 1, transform: rest }], zoomIn);
-    activeTurn = {
-      rect, stage: "zoom",
-      entries: [
-        { animation: zoomCover, element: clone, duration: zoomIn.duration, to: (next) => ({ transform: next.rest, opacity: 1 }) },
-        { animation: zoomPage, element: page, duration: zoomIn.duration, to: (next) => ({ transform: next.rest, opacity: 1 }) },
-      ],
-    };
-    await Promise.all([
-      zoomCover.finished,
-      zoomPage.finished,
-    ]);
+    // 阶段一：封面与内页一起放大到屏幕中央
+    const zoomCover = clone.animate(
+      [{ transform: "translate3d(0,0,0) scale(1)", opacity: 1 }, { transform: layout.rest, opacity: 1 }],
+      timing(TURN_ZOOM_MS, EASE_OUT)
+    );
+    const zoomPage = page.animate(
+      [{ transform: "translate3d(0,0,0) scale(1)", opacity: 0 }, { transform: layout.rest, opacity: 1 }],
+      timing(TURN_ZOOM_MS, EASE_OUT)
+    );
+    await Promise.all([zoomCover.finished, zoomPage.finished]);
 
-    // 两段之间留一帧间隙，让缩放的收尾与翻转的起势不挤在同一帧上（更顺滑）。
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-    // 隐去封面背面，避免旋转到背面时标题镜像透出。
+    // 阶段二：封面绕左侧书脊翻开，露出内页
     clone.classList.add("is-open");
-    // 书封翻过书脊，完整露出带书名与作者的内页。
-    const flipRest = turnLayout(rect).rest;
-  const flip = clone.animate(
-    [{ transform: getComputedStyle(clone).transform, opacity: 1 }, { transform: `${flipRest} rotateY(-168deg)`, opacity: 0.98 }],
-    { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
-  );
-  const pageFollow = page.animate(
-    [{ transform: getComputedStyle(page).transform }, { transform: flipRest }],
-    { duration: TURN_FLIP_MS, easing: "cubic-bezier(0.32, 0.06, 0.2, 1)", fill: "forwards" }
-  );
-    activeTurn = {
-      rect, stage: "flip",
-      entries: [
-        { animation: flip, element: clone, duration: TURN_FLIP_MS, to: (next) => ({ transform: `${next.rest} rotateY(-168deg)`, opacity: 0.98 }) },
-        { animation: pageFollow, element: page, duration: TURN_FLIP_MS, to: (next) => ({ transform: next.rest, opacity: 1 }) },
+    const flip = clone.animate(
+      [
+        { transform: layout.rest },
+        { transform: `${layout.rest} perspective(1600px) rotateY(-168deg)` },
       ],
-    };
-    await Promise.all([flip.finished, pageFollow.finished]);
+      timing(TURN_FLIP_MS, EASE_FLIP)
+    );
+    await flip.finished;
     clone.remove();
 
-    // 内页保持原比例放大到铺满屏幕，作为进入作品详情的衔接画面。
-    const fillLayout = turnLayout(rect);
-    const fill = page.animate(
-      [{ transform: getComputedStyle(page).transform, opacity: 1 }, { transform: fillLayout.final, opacity: 1 }],
-      { duration: TURN_FILL_MS, easing, fill: "forwards" }
-    );
-    activeTurn = {
-      rect, stage: "fill",
-      entries: [{ animation: fill, element: page, duration: TURN_FILL_MS, to: (next) => ({ transform: next.final, opacity: 1 }) }],
-    };
-    await fill.finished;
+    // 翻开的内页稍作停留，然后进入详情页；详情页的纸纹层负责衔接。
+    await new Promise((resolve) => setTimeout(resolve, 140));
 
     if (TURN_DEMO) {
-      // 让演示参数可重复使用：内页轻轻淡出后清理遮罩并恢复书架。
-      await page.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, easing: "ease-out", fill: "forwards" }).finished;
+      await page.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: "ease-out", fill: "forwards" }).finished;
       bailTurn(false);
       return;
     }
 
     try {
-      const title = cover.querySelector(".cover__title")?.textContent ?? "";
-      const author = cover.querySelector(".cover__author")?.textContent ?? "";
       sessionStorage.setItem(
-        "wk_book_arrival",
-        JSON.stringify({ id: new URL(link.href).searchParams.get("id"), title, author, scale: turnLayout(rect).finalScale })
+        BOOK_ARRIVAL_KEY,
+        JSON.stringify({
+          id: new URL(link.href).searchParams.get("id"),
+          title: cover.querySelector(".cover__title")?.textContent ?? "",
+          author: cover.querySelector(".cover__author")?.textContent ?? "",
+          scale: layout.scale,
+        })
       );
     } catch {
-      // 隐私模式可能禁用 sessionStorage；此时继续正常打开详情页。
+      /* 隐私模式可能禁用 sessionStorage */
     }
+
     turning = false;
-    activeTurn = null;
     pendingHref = "";
     window.location.href = link.href;
-  } catch (error) {
+  } catch {
     if (run !== turnRun) {
-      // 已被跳过/新一轮接管，此处只负责清理，不重复跳转。
       overlay.remove();
       return;
     }
-    activeTurn = null;
     turning = false;
     pendingHref = "";
-    // 转场被浏览器中断时仍打开作品，不让链接失去作用。
     if (!TURN_DEMO) window.location.href = link.href;
     else {
       overlay.remove();
@@ -291,30 +225,33 @@ document.addEventListener(
 );
 
 // 键盘同样可以跳过：Esc / 空格 / Enter 立即结束转场。
-document.addEventListener("keydown", (event) => {
-  if (!turning) return;
-  if (event.key === "Escape" || event.key === " " || event.key === "Enter") {
-    event.preventDefault();
-    bailTurn(true);
-  }
-},
-true);
+document.addEventListener(
+  "keydown",
+  (event) => {
+    if (!turning) return;
+    if (event.key === "Escape" || event.key === " " || event.key === "Enter") {
+      event.preventDefault();
+      bailTurn(true);
+    }
+  },
+  true
+);
+
+// 动画途中改变窗口尺寸会让位移计算失准，直接结束转场并打开作品。
+window.addEventListener(
+  "resize",
+  () => {
+    if (turning) bailTurn(true);
+  },
+  { passive: true }
+);
 
 // 从 bfcache 返回时清掉可能残留的转场层
 window.addEventListener("pageshow", (event) => {
-  if (event.persisted) {
-    turnRun += 1;
-    turning = false;
-    activeTurn = null;
-    pendingHref = "";
-    document.querySelectorAll(".page-turn").forEach((el) => el.remove());
-    document.body.classList.remove("is-page-turn", "is-returning");
-    try {
-      const origin = JSON.parse(sessionStorage.getItem(BOOK_ORIGIN_KEY) || "null");
-      const currentId = new URLSearchParams(window.location.search).get("id");
-      // ui.js consumes this record after the originating page is restored.
-      // Keep it while moving between detail pages so the original shelf remains known.
-      if (origin && origin.id !== currentId && !origin.returnRect) sessionStorage.removeItem(BOOK_ORIGIN_KEY);
-    } catch {}
-  }
+  if (!event.persisted) return;
+  turnRun += 1;
+  turning = false;
+  pendingHref = "";
+  document.querySelectorAll(".page-turn").forEach((el) => el.remove());
+  document.body.classList.remove("is-page-turn", "is-returning");
 });

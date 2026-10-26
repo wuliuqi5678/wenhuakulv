@@ -6,11 +6,14 @@
  * 局域网访问：HOST=0.0.0.0 PORT=8080 npm start
  */
 import path from "node:path";
+import fs from "node:fs";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import express from "express";
+import { registerAiRoutes } from "./server-ai.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const bootAt = Date.now();
 
 const PORT = Number(process.env.PORT ?? 3000);
 const HOST = process.env.HOST ?? "127.0.0.1";
@@ -24,11 +27,36 @@ const app = express();
 
 app.disable("x-powered-by");
 
+// API 响应一律不缓存
+app.use("/api", (req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
+
 /* ---------- 基础安全响应头（本地站点同样值得加，成本为零） ---------- */
 app.use((req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+  // 站内页面有少量内联脚本/样式，因此保留 unsafe-inline；仍限制外部资源与外连
+  res.setHeader(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "img-src 'self' data:",
+      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline'",
+      "connect-src 'self'",
+      "font-src 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+    ].join("; ")
+  );
   next();
 });
 
@@ -39,8 +67,13 @@ const COMPRESSIBLE = /^(?:text\/|application\/(?:json|javascript|xml)|image\/svg
 
 app.use((req, res, next) => {
   const accept = String(req.headers["accept-encoding"] ?? "");
+  const gzipToken = accept
+    .split(",")
+    .map((token) => token.trim())
+    .find((token) => token.toLowerCase().startsWith("gzip"));
+  const gzipQ = gzipToken?.match(/;\s*q=([0-9.]+)/i);
   res.setHeader("Vary", "Accept-Encoding");
-  if (req.method === "HEAD" || !accept.includes("gzip")) return next();
+  if (req.method === "HEAD" || !gzipToken || (gzipQ && Number(gzipQ[1]) <= 0)) return next();
 
   const rawWrite = res.write.bind(res);
   const rawEnd = res.end.bind(res);
@@ -100,6 +133,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// JSON 解析放在安全头/no-store/日志之后：畸形 JSON 的 400 也有安全头并会被记录。
+// 站内 AI 的请求体很小，限制在 64KB，避免异常大包。
+app.use(express.json({ limit: "64kb" }));
+
 /* ---------- 健康检查（供启动脚本与探活使用） ---------- */
 app.get("/api/health", (req, res) => {
   res.json({
@@ -118,41 +155,64 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 /* ---------- 静态站点 ----------
- * CSS/JS 缓存 1 小时；书目数据每次回源校验（ETag 命中即 304，不再整份重下）。 */
+ * 本地开发站点：一律 no-cache（靠 ETag 304 保持轻量），
+ * 保证改完 CSS/JS 刷新即可看到，不会出现「改了半天还是旧样式」。 */
 const PUBLIC_DIR = path.join(__dirname, "public");
+// 嵌套 404 也要能加载根目录资源、跳回正确页面；静态 404 仍保持相对路径，
+// 只在 Node 服务端渲染 404 时注入根 base。
+const NOT_FOUND_HTML = fs
+  .readFileSync(path.join(PUBLIC_DIR, "404.html"), "utf8")
+  .replace("<head>", '<head><base href="/">');
 app.use(
   express.static(PUBLIC_DIR, {
-    maxAge: "1h",
-    setHeaders(res, filePath) {
-      if (path.sep === path.basename(path.dirname(filePath)) + path.sep || filePath.includes(`${path.sep}data${path.sep}`)) {
-        res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
-      }
+    maxAge: 0,
+    etag: true,
+    lastModified: true,
+    setHeaders(res) {
+      res.setHeader("Cache-Control", "no-cache");
     },
   })
 );
 
+/* ---------- 站内 AI 助手（DeepSeek 代理 + 站内检索） ---------- */
+registerAiRoutes(app);
+console.log(
+  process.env.DEEPSEEK_API_KEY
+    ? "[ai] DeepSeek 已配置：/api/chat 可用"
+    : "[ai] 未配置 DEEPSEEK_API_KEY：AI 面板会提示配置方法"
+);
+
 /* ---------- API 未知路径返回 JSON；页面未知路径返回中文 404 ---------- */
 app.use("/api", (req, res) => {
-  res.status(404).json({ ok: false, error: `接口不存在：${req.method} ${req.originalUrl}` });
+  // 不回显请求路径，避免反射内容被用于钓鱼/探测
+  res.status(404).json({ ok: false, error: "接口不存在" });
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(PUBLIC_DIR, "404.html"));
+  res.status(404);
+  res.setHeader("Cache-Control", "no-store");
+  res.type("html").send(NOT_FOUND_HTML);
 });
 
 /* ---------- 兜底错误处理 ---------- */
 app.use((err, req, res, next) => {
-  console.error("[error]", err);
+  console.error("[error]", err?.message ?? err);
   if (res.headersSent) return next(err);
-  const status = err.status ?? 500;
+  const status = Number(err.status) || 500;
   if (status === 400 && err.type === "entity.parse.failed") {
     return res.status(400).json({ ok: false, error: "请求体不是合法 JSON" });
   }
-  res.status(status).json({ ok: false, error: err.message ?? "服务器内部错误" });
+  if (status === 413) {
+    return res.status(413).json({ ok: false, error: "请求内容过大" });
+  }
+  if (status >= 500) {
+    return res.status(500).json({ ok: false, error: "服务器内部错误" });
+  }
+  return res.status(status).json({ ok: false, error: "请求无法处理" });
 });
 
 const server = app.listen(PORT, HOST, () => {
-  console.log(`本地服务器已启动：http://${HOST}:${PORT}`);
+  console.log(`本地服务器已启动：http://${HOST}:${PORT}（${Date.now() - bootAt}ms）`);
   console.log('按 Ctrl+C 停止服务');
 });
 

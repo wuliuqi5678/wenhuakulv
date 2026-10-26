@@ -1,0 +1,41 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # 发布前先跑一遍站点自检：数据、站内链接、资源版本不一致就停下，不把坏版本推上线。
+      - name: Verify site data and links
+        run: node data/verify-site.mjs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload public/ as Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: public
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
